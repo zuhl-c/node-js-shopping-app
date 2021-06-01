@@ -1,0 +1,110 @@
+<section>
+{{#if orders}}
+    <div class="container">
+        <div class="cart-card mb-2 mt-2">
+            <div class="row">
+                {{#each orders}}
+                <div class="col-md-6">
+                    <div class="container my-5 d-flex justify-content-center">
+                        <div class="card cart-card p-1">
+                            <div class="card-body">
+                                <div class="row justify-content-between mb-3">
+                                    <div class="col-auto">
+                                        <h6 class=" mb-0">Order : <span class="fw-bold">{{this.status}}</span></h6>
+                                        <p>Date:</p>
+                                    </div>
+                                    <div class="col-auto "> <small> <b>Order Id:{{this._id}}</b></small>
+                                        <p>Track Order:</p>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <h6 class="col text-center pc">Processing</h6>
+                                                    <h6 class="col pc">Shipped</h6>
+                                                    <h6 class="col pc">OutOfDelivery</h6>
+                                                    <h6 class="col pc">Delivered</h6>
+                                                </div>
+                                                <div class="progress mt-2">
+                                                    <div class="progress-bar " id="status-bar" role="progressbar"
+                                                        style=" width: {{this.trackstatus}}; background:#20c997 ;" aria-valuemin="0" aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h6 class="p-1">Delivered Date: <span class="pc">{{this.delivered}}</span></h6>
+                                    </div>
+                                    <b>Total: &#8377; <span>{{this.totalAmount}}</span></b>
+                                    <p>Payment Method: <b>{{this.paymentMethod}}</b></p>
+                                    <h6>Payment <span class="text-success">success</span></h6>
+                                </div>
+                                <div class="pb-2"><b>Items:{{products.length}}</b></div>
+                                <div class="row">
+                                    {{#each products}}
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body text-center ">
+                                                <div class="media ">
+                                                    <div class="col align-self-center "> <img
+                                                            class="img-fluid my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
+                                                            src="/images/{{this.product._id}}.jpg" width="135"
+                                                            height="135" /> </div>
+                                                    <div class="">
+                                                        <h6 class=""></h6>
+                                                    </div>
+                                                    <div> <b>{{this.product.name}}</b></div>
+                                                    <div class="">
+                                                        <p>Qty :{{this.quantity}}</p>
+                                                    </div>
+                                                    <b class="mb-0">&#8377;{{this.product.price}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-12">
+                                        <div class="row justify-content-between">
+                                            <div>
+                                                <p class="mt-2 mb-2"><b> Delivery Address</b></p>
+                                                <div class="card w-50">
+                                                    <div class="card-body">
+                                                        <h6 class="text-muted" style="font-size: 14px;">name: {{this.deliveryAddress.fullname}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">phone: {{this.deliveryAddress.phone}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">pincode: {{this.deliveryAddress.pincode}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">state: {{this.deliveryAddress.state}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">city: {{this.deliveryAddress.city}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">area: {{this.deliveryAddress.area}}</h6>
+                                                        <h6 class="text-muted" style="font-size: 14px;">landmark: {{this.deliveryAddress.landmark}}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+{{else}}
+<div class="container">
+     <div class="card cart-card mb-2 mt-2 p-5">
+            <div class="empty-cart">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="m-auto text-center">
+                            <h5><b>Orders Empty</b></h5>
+                            <div class="back-to-shop" style="margin-top: 4.5rem">
+                                <a href="/">&leftarrow;</a>
+                                <span class="text-muted">Back to Home</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{{/if}}
+</section>

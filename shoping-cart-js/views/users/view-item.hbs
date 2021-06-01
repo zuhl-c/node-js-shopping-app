@@ -1,0 +1,27 @@
+<div class="container ">
+    <div class="cart-card mt-2 mb-2">
+    <div class="row wow fadeIn">
+        <div class="col-md-6 p-5">
+            <img src="/images/{{product._id}}.jpg" class="img-fluid">
+        </div>
+        <div class="col-md-6 p-5">
+                <h5 class="">
+                    <span> {{product.name}}</span>
+                </h5>
+
+                <p class="lead">
+                    <span class="fw-bold">Rs: {{product.price}}</span>
+                </p>
+
+                <p class=" fw-bold">Details</p>
+                <p class="">{{product.description}}</p>
+                <hr>
+                <div class="d-flex justify-content-left">
+                    <button class="btn btn-dark btn-md my-0 p" onclick=" addTocart ('{{product._id}}')">Add to cart
+                        <i class="fas fa-shopping-cart ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

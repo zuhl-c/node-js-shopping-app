@@ -1,0 +1,36 @@
+<header>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+            <div class="container">
+                <a class="navbar-brand text-white fw-bold fs-5" href="/"> Shopping cart</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
+                        </li>
+                        {{#if userId}}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/view-orders">Orders</a>
+                        </li>
+                        {{/if}}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/cart"><i class="fas fa-shopping-cart"></i> Cart <span class="badge text-white" id="cart-count">{{cartCount}}</span></a>
+                        </li>
+                         {{#if userId }}
+                        <li class="nav-item"><a class="nav-link text-white" href="/profile"> <i class="fas fa-user-alt"></i> Account</a></li>
+                        {{/if}}
+                    </ul>
+                    {{#if userId }}
+                    <li class="nav-item"><a class=" btn btn-light" href="/logout">Logout</a></li>
+                    {{else}}
+                    <li class="nav-item"><a class="btn btn-light" href="/login">Log in</a></li>
+                    {{/if}}
+                    </div>
+                </div>
+            </div>
+        </nav>
+</header>

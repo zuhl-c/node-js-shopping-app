@@ -1,0 +1,116 @@
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wmx-auto my-5 py-">
+                    <div class="card cart-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 p-2">
+                                    <b> Order ID : <span id="orderid">{{details._id}}</span></b>
+                                    <h6 class="pt-2"> Date : <span>{{details.date}}</span></h6>
+                                    <h6 class="pt-2 fw-bold">Total Amount : &#8377;<span>{{details.totalAmount}}</span>
+                                    </h6>
+                                    <hr class="w-50">
+                                    <br>
+                                    <h6 class="fw-bold p-2">Address :</h6>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6> User ID : <span>{{details.userId}}</span></h6>
+                                            <h6> Name : <span>{{details.deliveryAddress.fullname}}</span></h6>
+                                            <h6> Phone : <span>{{details.deliveryAddress.phone}}</span></h6>
+                                            <h6> State : <span>{{details.deliveryAddress.state}}</span></h6>
+                                            <h6> Pincode : <span>{{details.deliveryAddress.pincode}}</span></h6>
+                                            <h6> City : <span>{{details.deliveryAddress.city}}</span></h6>
+                                            <h6> Area : <span>{{details.deliveryAddress.area}}</span></h6>
+                                            <h6> Landmark : <span>{{details.deliveryAddress.landmark}}</span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 p-2">
+                                    <h6 class="fw-bolder"> Order: <span id="order_status">{{details.status}}</span></h6>
+                                    <h6> Date : {{details.delivered}}</h6>
+                                    <h6 class="fw-bolder"> Payment Method: <span
+                                            class="text-success">{{details.paymentMethod}}</span></h6>
+                                    <hr>
+                                    <b> Update Tracking Status</b><br>
+                                    <div class="card mt-2">
+                                        <div class="card-body" id="statuspage">
+                                            <div class="row">
+                                                <h6 class="col-4 text-center pc">Processing</h6>
+                                                <h6 class="col-3 pc">Shipped</h6>
+                                                <h6 class="col pc">OutOfDelivery</h6>
+                                                <h6 class="col pc">Delivered</h6>
+                                            </div>
+                                            <div class="progress mt-2">
+                                                <div class="progress-bar " id="status-bar" role="progressbar"
+                                                    style=" width: {{details.trackstatus}}; background:#20c997 ;"
+                                                    aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <div class="btn pt-4">
+                                                <button class="btn btn-outline-dark fw-bold" id="update"
+                                                    style="font-size: 15px;" onclick="update(25)">update</button>
+                                            </div>
+                                            <div class="btn pt-4">
+                                                <button class="btn btn-outline-dark fw-bold" id="confirm"
+                                                    style="font-size: 15px;" onclick="statusconfirm()">confirm</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6 class="fw-bold pt-5"><span> TOTAL AMOUNT : &#8377;{{details.totalAmount}}</span>
+                                    </h6>
+                                    <h6 class="fw-bold">ITEMS : <span>{{details.products.length}}</span></h6>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card text-left">
+                    <div class="card-body">
+                        <div class="table-wrapper">
+                            <table class="fl-table" style="font-size: 14px;">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-dark text-white">Items</th>
+                                        <th class="bg-dark text-white">Quantity</th>
+                                        <th class="bg-dark text-white">Catogary</th>
+                                        <th class="bg-dark text-white">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each details.products}}
+                                    <tr>
+                                        <td><img style="width: 100px;" src="/images/{{product._id}}.jpg">
+                                            {{product.name}}</td>
+                                        <td>{{this.quantity}}</td>
+                                        <td>{{product.catogary}}</td>
+                                        <td class="fw-bold">&#8377;{{product.price}}</td>
+                                    </tr>
+                                    {{/each}}
+                                <tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<script>
+    var cond = document.getElementById("order_status").innerHTML;
+            if(cond=="placed"){
+                document.getElementById("order_status").style.color='#198754';
+            }else if(cond=="delivered"){
+                document.getElementById("order_status").style.color='#198754';
+                $('#update').prop('disabled', true);
+                $('#confirm').prop('disabled', true);
+            }
+            else{
+                document.getElementById("order_status").style.color='#dc3545';
+                $('#update').prop('disabled', true);
+                $('#confirm').prop('disabled', true);
+            }
+</script>

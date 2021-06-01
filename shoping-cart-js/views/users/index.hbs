@@ -1,0 +1,42 @@
+<section>
+<div class="bg-light py-1">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center">
+            <h1 class="display-6 pb-2 fw-bolder">Shoping Cart </h1>
+            <div class="d-flex justify-content-center px-5">
+                <div class="search">
+                    <input type="text" id="keyword" class="search-input" placeholder="Search..." name="">
+                    <button class="search-icon btn-dark" onclick="searchKey()"> <i class="fas fa-search"></i> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container">
+        <div class="row">
+            {{#each products}}
+            <div class="col-md-2 p-2 ">
+                <div class="cart-card h-100">
+                    <a  href="/view-item/{{this._id}}"><img class="card-img-top"  src="/images/{{this._id}}.jpg" /></a>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="fw-bolder">{{this.name}}</h6>
+                            <div class="d-flex justify-content-center small text-info mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>Rs {{this.price}}</span> 
+                        </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparen text-center">
+                        <button onclick=" addTocart ('{{this._id}}')" class="btn btn-dark fw-bold" style="font-size:smaller;">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>

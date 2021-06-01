@@ -1,0 +1,40 @@
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 pt-4 m-auto">
+                <h2 class="fw-normal text-center">ADD PRODUCT</h2>
+                 <div class="cart-card p-5 mt-2 mb-2">
+                <form action="/admin/add-product" enctype="multipart/form-data" method="POST">
+                    <label for="" class="p-2">Product Name</label>
+                    <input type="text" name="name" class="form-control">
+
+                    <label for="" class="p-2">Catogary</label>
+                    <select name="catogary" id="" class="form-control">
+                        <option value="" selected></option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Stationary">Stationary</option>
+                        <option value="Backery">Backery</option>
+                        <option value="Home-kitchen">Home-kitchen</option>
+
+                    </select>
+
+                    <label for="" class="p-2">Price</label>
+                    <input type="number" name="price" class="form-control">
+
+                    <label for="" class="p-2">Description</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" name="description"
+                            style="height: 100px"></textarea>
+                    </div>
+
+                    <label for="" class="p-2">Image</label>
+                    <input type="file" name="image" class="form-control" >
+                    <div class="m-auto btn w-100 p-4">
+                        <button type="submit" class="btn btn-dark w-50">Submit</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
