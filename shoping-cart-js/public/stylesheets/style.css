@@ -240,6 +240,7 @@ a:hover {
   max-width: 100%;
   white-space: nowrap;
   background-color: white;
+  height: auto;
 }
 
 .fl-table td, .fl-table th {

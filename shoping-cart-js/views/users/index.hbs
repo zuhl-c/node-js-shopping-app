@@ -1,8 +1,9 @@
 <section>
-<div class="bg-light py-1">
+<div class=" py-1">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center">
-            <h1 class="display-6 pb-2 fw-bolder">Shoping Cart </h1>
+                <h2 class=" fw-bolder">SHOPPING  CART</h2>
+                <h6 class="fw-bold">Developed by zuhail <i class="fab fa-github"></i></h6>
             <div class="d-flex justify-content-center px-5">
                 <div class="search">
                     <input type="text" id="keyword" class="search-input" placeholder="Search..." name="">
@@ -15,7 +16,7 @@
     <div class="container">
         <div class="row">
             {{#each products}}
-            <div class="col-md-2 p-2 ">
+            <div class="col-md-3 p-2 ">
                 <div class="cart-card h-100">
                     <a  href="/view-item/{{this._id}}"><img class="card-img-top"  src="/images/{{this._id}}.jpg" /></a>
                     <div class="card-body">

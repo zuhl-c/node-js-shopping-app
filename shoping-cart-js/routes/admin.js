@@ -1,3 +1,6 @@
+/* This program was written by zuhail pm*/
+/* for more details :github/zuhl-c*/
+
 //modules importing//
 var express = require('express');
 const session = require('express-session')

@@ -1,3 +1,5 @@
+/* This program was written by zuhail pm*/
+/* for more details :github/zuhl-c*/
 
 function viewImage(event){
     document.getElementById('imgView').src=URL.createObjectURL(event.target.files[0])

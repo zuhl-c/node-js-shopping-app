@@ -1,3 +1,6 @@
+/* This program was written by zuhail pm*/
+/* for more details :github/zuhl-c*/
+
 var collection=require('../config/collections')
 var db=require('../config/connection')
 var objectId=require('mongodb').ObjectID;
@@ -16,7 +19,6 @@ async function makeadmin() {
         }
         
     })
-    
 }
 
 module.exports={

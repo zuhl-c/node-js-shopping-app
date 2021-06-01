@@ -1,7 +1,6 @@
 <section>
   <div class="container">
     <div class="card cart-card mb-2 mt-2 py-5">
-      <div class="empty-cart">
         <div class="row">
           <div class="col-md-12">
             <div class="d-flex justify-content-center px-5 pb-5">
@@ -14,7 +13,7 @@
               </div>
             </div>
             <div class="table-wrapper">
-              <table class="fl-table" id="product-Table" style="font-size: 14px;">
+              <table class="fl-table" id="product-Table" style="font-size: 15px;">
                 <thead>
                   <tr>
                     <th class="bg-dark text-white">Item</th>
@@ -27,7 +26,7 @@
                 <tbody>
                   {{#each products}}
                   <tr>
-                    <td><img style="width: 50px;" src="/images/{{this._id}}.jpg">
+                    <td><img style="width: 80px;" src="/images/{{this._id}}.jpg">
                       <p>{{this.name}}</p>
                     </td>
                     <td class="text-secondary">{{this.catogary}}</td>
@@ -43,7 +42,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </section>
 <script>
