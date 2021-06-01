@@ -102,6 +102,13 @@ module.exports={
                     reslove()
             }
         })
+    },getAllusers(){
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION).find({},{projection:{password:0}}).toArray().then((data)=>{
+                console.log(data)
+                resolve(data)
+            })
+        })
     }
 }
 

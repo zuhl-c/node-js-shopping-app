@@ -1,45 +1,45 @@
-
-
 <section>
   <div class="container">
-    <div class="card cart-card mb-2 mt-2 p-5">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="d-flex justify-content-center px-5 pb-5">
-            <div class="search">
-              <input id="search-input" type="search" id="form1" class="search-input" placeholder="search.." />
+    <div class="card cart-card mb-2 mt-2 py-5">
+      <div class="empty-cart">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-center px-5 pb-5">
+              <div class="search">
+                <input id="search-input" type="search" id="form1" class="search-input" placeholder="search.." />
 
-              <button id="search-button" type="button" class="search-icon btn-dark">
-                <i class="fas fa-search"></i>
-              </button>
+                <button id="search-button" type="button" class="search-icon btn-dark">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="table-wrapper">
-            <table class="fl-table" id="product-Table" style="font-size: 14px;">
-              <thead>
-                <tr>
-                  <th class="bg-dark text-white">Item</th>
-                  <th class="bg-dark text-white">Catogary</th>
-                  <th class="bg-dark text-white">Price</th>
-                  <th class="bg-dark text-white">In stock</th>
-                  <th class="bg-dark text-white">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#each products}}
-                <tr>
-                  <td><img style="width: 50px;" src="/images/{{this._id}}.jpg">
-                    <p>{{this.name}}</p>
-                  </td>
-                  <td class="text-secondary">{{this.catogary}}</td>
-                  <td class="fw-bold">&#8377;{{this.price}}</td>
-                  <td>1</td>
-                  <td><a href="/admin/edit-product?id={{this._id}}" class="text-white btn btn-dark fw-bold"
-                      style="font-size: small;">view</a></td>
-                </tr>
-                {{/each}}
-              <tbody>
-            </table>
+            <div class="table-wrapper">
+              <table class="fl-table" id="product-Table" style="font-size: 14px;">
+                <thead>
+                  <tr>
+                    <th class="bg-dark text-white">Item</th>
+                    <th class="bg-dark text-white">Catogary</th>
+                    <th class="bg-dark text-white">Price</th>
+                    <th class="bg-dark text-white">In stock</th>
+                    <th class="bg-dark text-white">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each products}}
+                  <tr>
+                    <td><img style="width: 50px;" src="/images/{{this._id}}.jpg">
+                      <p>{{this.name}}</p>
+                    </td>
+                    <td class="text-secondary">{{this.catogary}}</td>
+                    <td class="fw-bold">&#8377;{{this.price}}</td>
+                    <td>1</td>
+                    <td><a href="/admin/edit-product?id={{this._id}}" class="text-white btn btn-dark fw-bold"
+                        style="font-size: small;">view</a></td>
+                  </tr>
+                  {{/each}}
+                <tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

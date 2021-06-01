@@ -110,16 +110,24 @@ router.get('/all-orders',verifyAdmin,async function (req,res) {
  res.render('admin/all-orders',{orders,header,admin})
 
 })
+//view orders//
 router.get('/view-order',verifyAdmin, async function (req,res) {
   console.log(req.query.id)
   let details= await adminHelpers.getOrderDetails(req.query.id)
   console.log(details)
   res.render('admin/view-order',{admin,header,details})
 })
+//cahnge status//
 router.post('/change-status',function (req,res){
   adminHelpers.changeStatus(req.body).then((response)=>{
     console.log(response)
     res.json({status:true})
   })
 })
+//all users//
+router.get('/all-users',verifyAdmin,async function(req,res){
+  let customers= await adminHelpers.getAllusers()
+  res.render('admin/view-users',{customers,admin,header})
+})
+
 module.exports = router;
