@@ -6,7 +6,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="text-white"><i class="fas fa-bars"></i></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">>
@@ -20,7 +20,9 @@
                         <li class="nav-item"><a class="nav-link text-white" href="/admin/add-product"> <i class="fas fa-plus"></i> Add product</a></li>
 
                     </ul>
-                    <li class="nav-item"><a class=" btn btn-light fw-bold" href="admin/logout">Logout</a></li>
+                    <ul class="navbar-nav mb-lgo-0">
+                        <li class="nav-item"><a class="nav-link text-white" href="admin/logout"><i class="fas fa-sign-in-alt"> </i> Log out</a></li>
+                    </ul>
                     {{/if}}
                     </div>
                 </div>

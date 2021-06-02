@@ -17,8 +17,8 @@
         <div class="row">
             {{#each products}}
             <div class="col-md-3 p-2 ">
-                <div class="cart-card h-100">
-                    <a  href="/view-item/{{this._id}}"><img class="card-img-top"  src="/images/{{this._id}}.jpg" /></a>
+                <div class="cart-card h-100 m-auto" style="width: 250px;">
+                    <div class="text-center"><a  href="/view-item/{{this._id}}"><img  width="150px" src="/images/{{this._id}}.png" /></a></div>
                     <div class="card-body">
                         <div class="text-center">
                             <h6 class="fw-bolder">{{this.name}}</h6>
@@ -29,7 +29,7 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <span>Rs {{this.price}}</span> 
+                            <span class="fw-bolder">&#8377; {{this.price}}</span> 
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparen text-center">

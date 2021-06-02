@@ -3,16 +3,14 @@
 
 //modules importing//
 var express = require('express');
-const session = require('express-session')
 var router = express.Router();
 const productHelpers = require('../helpers/product-helpers')
 const adminHelpers =require('../helpers/admin-helpers');
-const userHelpers = require('../helpers/user-helpers');
-const { response } = require('express');
-
+const sharp = require('sharp');
+const fs =require('fs')
 var header=true;
 var admin=true;
-//checking admin loggedIn
+//checking admin loggedIn//
 function verifyAdmin(req,res,next) {
   if(req.session.LoggedIn&&req.session.admin){
     next()
@@ -21,13 +19,14 @@ function verifyAdmin(req,res,next) {
   }
 }
 
-// GET admin listing
-router.get('/',verifyAdmin,async function(req, res,next) {
+// GET admin listing//
+router.get('/',verifyAdmin,async function(req, res) {
   let products = await productHelpers.getAllProducts()
   console.log(products)
   res.render('admin/view-products',{admin,header,products})
-})
 
+})
+//admin login//
 router.post('/admin-login',async(req,res)=>{
   adminHelpers.adminLogin(req.body).then((status)=>{
     if(status.pswrd){
@@ -41,32 +40,27 @@ router.post('/admin-login',async(req,res)=>{
     res.render('admin/admin-login',{err,admin})
   })
 })
-
+//admin logout//
 router.get('/logout',function (req,res){
   req.session.destroy();
   console.log('admin logout')
   res.redirect('/admin')
 })
 
-//add product
+//add product//
 router.get('/add-product',verifyAdmin,function(req,res){
   res.render('admin/add-product',{admin,header})
 })
 
-router.post('/add-product',function(req,res){
-  productHelpers.addProduct(req.body).then((id)=>{
-    let image = req.files.image
-    image.mv('./public/images/'+id+'.jpg',(err)=>{
-      if (!err){
-        console.log('product upload done')
-      }else{
-        console.log(err)
-      }
-    })
+router.post('/add-product', function(req,res){
+  productHelpers.addProduct(req.body).then(async(id)=>{
+    await sharp(req.files.image.data).resize(640,640).toFile('./public/images/'+id+'.png')
     res.redirect('/admin')
-  })
+    //console.log(req.files)/
+ })
+ //console.log(req.files.image.data)
 })
-//edit product
+//edit product//
 router.get('/edit-product',verifyAdmin, async function(req,res){
   //console.log(req.query)
   let product= await productHelpers.getProductDetails(req.query.id)
@@ -77,23 +71,30 @@ router.get('/edit-product',verifyAdmin, async function(req,res){
 
 router.post('/edit-product/:id',function(req,res){
   productHelpers.updateProduct(req.params.id,req.body).then(()=>{
-
-    console.log('product updated')
-    res.redirect('/admin/')
-
     let id =req.params.id;
-    let image=req.files.image;
-
     if(req.files){
-      image.mv('./public/images/'+id+'.jpg')
+     sharp(req.files.image.data).resize(640,640).toFile('./public/images/'+id+'.png')
       console.log('image updated')
 
     }else{
       console.log('image not updated')
     }
+    console.log('product updated')
+    res.redirect('/admin/')
   })
 })
-//delete product
+
+// router.post('/upload-photo',(req,res)=>{
+//   console.log(req.body)
+//   if(req.body.image){
+
+//     let image=req.body.image;
+//     console.log('files')
+//     image.mv('./public')
+//   }
+// })
+
+//delete product//
 router.get('/delete-product/:id',verifyAdmin,function(req,res){
   let productId=req.params.id;
   productHelpers.deleteProduct(productId).then((response)=>{

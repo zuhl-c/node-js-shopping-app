@@ -23,14 +23,17 @@
                     </li>
                     {{#if userId }}
                     <li class="nav-item"><a class="nav-link text-white" href="/profile"> <i class="fas fa-user-alt"></i>
-                            Account</a></li>
+                            Account</a>
+                    </li>
                     {{/if}}
                 </ul>
-                {{#if userId }}
-                <li class="nav-item"><a class=" btn btn-light fw-bold" href="/logout">Log out</a></li>
-                {{else}}
-                <li class="nav-item"><a class="btn btn-light fw-bold" href="/login">Log in</a></li>
-                {{/if}}
+                <ul class="navbar-nav mb-lg-0">
+                    {{#if userId }}
+                    <li class="nav-item"><a class=" nav-link  text-white" href="/logout"><i class="fas fa-sign-in-alt"></i> Log out</a></li>
+                    {{else}}
+                    <li class="nav-item"><a class=" nav-link text-white" href="/login"><i class="fas fa-sign-in-alt"></i> Log in</a></li>
+                    {{/if}}
+                </ul>
             </div>
         </div>
         </div>

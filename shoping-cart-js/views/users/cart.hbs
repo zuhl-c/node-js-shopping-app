@@ -2,7 +2,7 @@
 <section>
 {{#if products}}
 <div class="container">
-    <div class="card cart-card p-5 mt-2 mb-2">
+    <div class="card cart-card p-5 mt-2 mb-2" id="blur-cart">
         <div class="row">
             <div class="col-md-8 cart">
                 <h5 class="mb-5"><b>Items</b></h5>
@@ -10,7 +10,7 @@
                 <div class="row border-top border-bottom">
                     <div class="row main align-items-center">
                         <div class="col-2"><a href="/view-Item/{{this.product._id}}"><img class="img-fluid"
-                                    src="/images/{{this.product._id}}.jpg"></a></div>
+                                    src="/images/{{this.product._id}}.png"></a></div>
                         <div class="col">
                             <div class="row text-muted">{{this.product.catogary}}</div>
                             <div class="row">{{this.product.name}}</div>
@@ -29,7 +29,8 @@
                 {{/each}}
                 <div class="back-to-shop" style="margin-top: 4.5rem">
                     <a href="/">&leftarrow;</a>
-                    <spanclass="text-muted">Back to Home</spanclass=>
+                    <span class="text-muted">Back to Home</span>
+                     <a href="javascript:myBlurFunction(1);">Blur</a>
                 </div>
             </div>
             <div class="col-md-4 summary">
@@ -87,4 +88,21 @@
     </div>
 </div>
 {{/if}}
+</section>
+<section>
+<div class="modal fade" id="success" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content card cart-card" style="height: 200px;">
+      <div class="card-body p-2">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center pt-2">
+            <h5 class="fw-bold"> Order successfull <span class="text-success"><i class="fas fa-check"></i></span></h5>
+        </div>
+        <div class="text-center pt-2">
+            <a class=" fw-bold" href="/view-orders">&leftarrow; Go Back to your orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </section>

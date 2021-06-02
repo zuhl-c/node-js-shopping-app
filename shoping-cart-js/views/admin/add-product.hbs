@@ -2,14 +2,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 pt-4 m-auto">
-                <h2 class="fw-normal text-center">ADD PRODUCT</h2>
-                 <div class="cart-card p-5 mt-2 mb-2">
                 <form action="/admin/add-product" enctype="multipart/form-data" method="POST">
+                <h5 class=" text-center">ADD PRODUCT</h5>
+                 <div class="cart-card p-5 mt-2 mb-2">
                     <label for="" class="p-2">Product Name</label>
                     <input type="text" name="name" class="form-control">
 
                     <label for="" class="p-2">Catogary</label>
-                    <select name="catogary" id="" class="form-control">
+                    <select name="catogary" class="form-control">
                         <option value="" selected></option>
                         <option value="Electronics">Electronics</option>
                         <option value="Stationary">Stationary</option>
@@ -17,7 +17,6 @@
                         <option value="Home-kitchen">Home-kitchen</option>
 
                     </select>
-
                     <label for="" class="p-2">Price</label>
                     <input type="number" name="price" class="form-control">
 
@@ -25,15 +24,22 @@
                     <div class="form-floating">
                         <textarea class="form-control" name="description"
                             style="height: 100px"></textarea>
-                    </div>
-
-                    <label for="" class="p-2">Image</label>
-                    <input type="file" name="image" class="form-control" >
-                    <div class="m-auto btn w-100 p-4">
-                        <button type="submit" class="btn btn-dark w-50">Submit</button>
-                    </div>
-                </form>
+                    </div>                    
                 </div>
+            </div>
+            <div class="col-md-6 pt-4 m-auto ">
+                <h5 class="text-center">ADD PRODUCT IMAGE </h5>
+                    <div class="cart-card p-5 mt-2 mb-2">
+                    <div class="p-2 text-center">
+                        <img id="imgView"  style="width: 300px;" class="img-fluid m-auto">
+                    </div>
+                    <input type="file" id="image" onchange="viewImage(event)" name="image" class="form-control" >
+                    <h6 style="font-size: 15px;" class="pt-2 text-center text-secondary">Required image resolution : 640x640</h6>
+                    <div class="m-auto btn w-100 p-4">
+                        <button type="submit" id="add" class="btn btn-dark w-50">Submit</button>
+                    </div>
+                    </div>
+            </form>
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ var objectId=require('mongodb').ObjectID;
 const bcrypt=require('bcrypt')
 const date = require('date-and-time');
 
+
 async function makeadmin() {
     var Admin = {name:'zuhl-c',phone:8086900574,password:'zuhl-c/github'}
     Admin.password = await  bcrypt.hash(Admin.password,10,)

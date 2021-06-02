@@ -68,7 +68,7 @@ $("#checkout-form").submit((e)=>{
         data:$('#checkout-form').serialize(),
         success:(response)=>{
             if(response.CODsuccess){
-                location.href="/order-success"
+                $('#success').modal('toggle');
             }else{
                 razorpayPayment(response)
             }
@@ -113,7 +113,8 @@ function razorpayPayment(order){
             method:'post',
             success:(response)=>{
                 if(response.status){
-                    location.href='/order-success'
+                    //location.href='#order-success'
+                    $('#success').modal('toggle');
                 }else{
                     location.href='/order-failed'
                 }
@@ -165,4 +166,4 @@ function razorpayPayment(order){
                 }
             })
         }
-            
+       
