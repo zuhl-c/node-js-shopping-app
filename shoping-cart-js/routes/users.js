@@ -210,32 +210,33 @@ router.post('/place-order',async(req,res)=>{
       console.log('cash on delivery')
       res.json({CODsuccess:true})
     }else{
-      console.log('generating razorpay order')
-      userHelpers.generateRazorPay(orderId,totalPrice).then((response)=>{
+      userHelpers.generateRazorPay(orderId,totalPrice,userId).then((response)=>{
         res.json(response)
         console.log(response)
+      }).catch((err)=>{
+        console.log(err)
       })
     }
   })
 })
 //verify payment//
 router.post('/verify-payment',(req,res)=>{
+  //recieving razorpay order id,payment id,signature and order details,amount,currency,status,reciept//
+  //passing this details to verifypayment //
   console.log(req.body)
   userHelpers.verifyPayment(req.body).then(()=>{
-    console.log('payment verified')
-    userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
-      res.json({status:true})
-      console.log('payment successfull')
-    })
+    res.json({status:true})
+    console.log('payment successfull')
   }).catch((err)=>{
     res.json({status:false})
+    console.log('payment failed')
   })
 })
 //order//
-router.get('/order-success',verifyLogin,(req,res)=>{
-  var userId=req.session.user._id;
-  res.render('users/order-success',{userId,cartCount})
-})
+// router.get('/order-success',verifyLogin,(req,res)=>{
+//   var userId=req.session.user._id;
+//   res.render('users/order-success',{userId,cartCount})
+// })
 
 router.get('/view-orders',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;

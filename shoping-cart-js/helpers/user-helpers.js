@@ -358,9 +358,11 @@ module.exports={
             console.log(Order)
             db.get().collection(collection.ORDER_COLLECTION).insertOne(Order).then((response)=>{
                 //removing cart of ordered item
-                db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(order.userId)}).then(()=>{
-                    console.log('cart removed of orderd items')
-                })
+                if(order['payment-method']==='COD'){
+                    db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(order.userId)}).then(()=>{
+                        console.log('cart removed of orderd items -COD')
+                    })
+                }
                 //console.log(response.ops[0]._id)
                 resolve(response.ops[0]._id)
             })
@@ -444,18 +446,25 @@ module.exports={
     //     })
 
     // },
-    generateRazorPay:(orderId,totalAmt)=>{
+    generateRazorPay:(orderId,totalAmt,userId)=>{
         return new Promise((resolve,reject)=>{
             var options = {  
             amount: totalAmt*100,  // amount in the smallest currency unit  
             currency: "INR",  
-            receipt:''+orderId
+            receipt:''+orderId,
         }
             instance.orders.create(options, function(err, order){
                 if(err){
-                    console.log(err)
+                    console.log('razrorpay order generation failed')
+                    db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(orderId)}).then(()=>{
+                        console.log('order removed')
+                    })
+                    reject(err)
                 }else{
-                    //console.log(order)
+                    console.log('razorpay order generation successfull')
+                    db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(userId)}).then(()=>{
+                        console.log('cart removed of orderd items -ONLINE')
+                    })
                     resolve(order)
                 }
             })
@@ -463,31 +472,26 @@ module.exports={
     },
     verifyPayment:(details)=>{
         return new Promise((resolve,reject)=>{
-            const crypto = require('crypto') 
+            const crypto = require('crypto')
+            //creating hmac hash key using razorpay secret key //
             let hmac = crypto.createHmac('sha256','u4SJ2vhKNTU6cbNS6JEra6Pi')
-
+            console.log(hmac)
+            //push this order-data to hmac //
             hmac.update(details['payment[razorpay_order_id]']+'|'+details['payment[razorpay_payment_id]'])
+            // creating signature //
             hmac=hmac.digest('hex')
+            // checking recieved signature parameter equal to created hmac signature //
             if(hmac==details['payment[razorpay_signature]']){
-                resolve()
+                console.log('created signature: '+hmac)
+                console.log('received signature: '+details['payment[razorpay_signature]'])
+                console.log('payment verified')
+                let receipt = details['order[receipt]']
+                db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(receipt)},{$set:{'status':'placed'}})
+                resolve()  
             }else{
+                console.log('payment verification failed')
                 reject()
             }
         })
     },
-
-    changePaymentStatus:(orderId)=>{
-        console.log(orderId)
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(orderId)},
-            {
-                $set:{
-                    status:'placed'
-                }
-            }).then(()=>{
-                resolve()
-                console.log('payment status changed')
-            })
-        })
-    }
 }

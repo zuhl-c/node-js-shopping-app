@@ -5,17 +5,17 @@
     <div class="card cart-card p-5 mt-2 mb-2" id="blur-cart">
         <div class="row">
             <div class="col-md-8 cart">
-                <h5 class="mb-5"><b>Items</b></h5>
+                <h5 class="mb-5"><b>Items <span>{{products.length}}</span></b></h5>
                 {{#each products}}
                 <div class="row border-top border-bottom">
                     <div class="row main align-items-center">
-                        <div class="col-2"><a href="/view-Item/{{this.product._id}}"><img class="img-fluid"
-                                    src="/images/{{this.product._id}}.png"></a></div>
-                        <div class="col">
-                            <div class="row text-muted">{{this.product.catogary}}</div>
-                            <div class="row">{{this.product.name}}</div>
+                        <div class="col-3"><a href="/view-Item/{{this.product._id}}"><img class="img-fluid"
+                                    src="/images/{{this.product._id}}.png"></a>
                         </div>
-                        <div class="col">
+                        <div class="col-3">
+                            <div class="row fw-bold">{{this.product.name}}</div>
+                        </div>
+                        <div class="col-3">
                             <button class="btn btn-dark p-1"
                                 onclick="changeQty('{{this._id}}','{{this.product._id}}',-1)">-</button>
                             <span class="p-2 fw-bold" id="{{this.product._id}}">{{this.quantity}}</span>
@@ -23,14 +23,13 @@
                                 onclick="changeQty('{{this._id}}','{{this.product._id}}',1)">+</button>
                         </div>
 
-                        <div class="col">Rs: <span class="close">{{this.product.price}}</span></div>
+                        <div class="col-3 fw-bold">&#8377; <span class="close">{{this.product.price}}</span></div>
                     </div>
                 </div>
                 {{/each}}
                 <div class="back-to-shop" style="margin-top: 4.5rem">
                     <a href="/">&leftarrow;</a>
                     <span class="text-muted">Back to Home</span>
-                     <a href="javascript:myBlurFunction(1);">Blur</a>
                 </div>
             </div>
             <div class="col-md-4 summary">
@@ -59,7 +58,7 @@
                             <input type="radio" name="payment-method" value="ONLINE" checked> ONLINE
                         </label>
                         <hr>
-                        <div class="col pt-2 text-right">TOTAL PRICE <b class="px-2">Rs:</b><span id="total"
+                        <div class="col pt-2 text-right">TOTAL PRICE <b class="px-2">&#8377;</b><span id="total"
                                 class="fw-bolder">{{total}}</span></div>
                     </div>
                     <hr style=" margin-top: 1.25rem">
