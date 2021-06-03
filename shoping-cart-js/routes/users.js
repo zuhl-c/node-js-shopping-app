@@ -214,6 +214,7 @@ router.post('/place-order',async(req,res)=>{
         res.json(response)
         console.log(response)
       }).catch((err)=>{
+        res.json({err})
         console.log(err)
       })
     }

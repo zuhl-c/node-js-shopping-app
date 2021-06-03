@@ -1,6 +1,6 @@
 <section>
 <div class=" py-1">
-    <div class="container px-4 px-lg-5 my-5">
+    <div class="container px-4 px-lg-5 my-4">
         <div class="text-center">
                 <h2 class=" fw-bolder">SHOPPING  CART</h2>
                 <h6 class="fw-bold">Developed by zuhail <i class="fab fa-github"></i></h6>
@@ -16,7 +16,7 @@
     <div class="container">
         <div class="row">
             {{#each products}}
-            <div class="col-md-3 p-2 ">
+            <div class="col-md-3 p-2">
                 <div class="cart-card h-100 m-auto" style="width: 250px;">
                     <div class="text-center"><a  href="/view-item/{{this._id}}"><img  width="150px" src="/images/{{this._id}}.png" /></a></div>
                     <div class="card-body">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparen text-center">
-                        <button onclick=" addTocart ('{{this._id}}')" class="btn btn-dark fw-bold" style="font-size:smaller;">Add To Cart</button>
+                        <button onclick=" addTocart ('{{this._id}}')" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#addtocart" style="font-size:smaller;">Add To Cart</button>
                     </div>
                 </div>
             </div>
@@ -41,3 +41,20 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="addtocart" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content m-auto card cart-card">
+      <div class="card-body p-2">
+        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center p-2">
+            <h6 class="fw-bold" style="font-size: 14px;">Item added to cart <span class="text-dark"></span><i class="fas fa-cart-arrow-down"></i></h6>
+            <a href="/cart" class="btn btn-dark fw-bold" style="font-size: 12px;">Go To Cart</a>
+        </div>
+        <div class="text-center pt-2">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
