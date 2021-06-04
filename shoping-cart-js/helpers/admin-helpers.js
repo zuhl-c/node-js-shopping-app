@@ -73,25 +73,32 @@ module.exports={
     changeStatus(data){
         var id=data.id;
         var status=data.value;
+        var tracking;
+        var tStatus;
+        var deliverd;
         //console.log(status)
         if(status=="25%"){
-            var track_status="25%"
+            tracking="25%";
+            tstatus="processing"
         }
         else if(status=="50%"){
-            track_status="50%";
+            tracking="50%";
+            tstatus="shipped"
         }
         else if(status=="75%"){
-            track_status="75%";
+            tracking="75%";
+            tstatus="out of delivery"
         }
         else if(status=="100%"){
-            track_status="100%";
-            var deliverd=true;
+            tracking="100%";
+            tstatus="delivered"
+            deliverd=true;
         }
         return new Promise(async(reslove,reject)=>{
             if(deliverd){
                 db.get().collection(collection.ORDER_COLLECTION).updateOne(
                     {_id:objectId(id)},
-                    {$set:{trackstatus:track_status,
+                    {$set:{tracking:tracking,
                         status:'delivered',
                         delivered:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
                     }})
@@ -100,12 +107,13 @@ module.exports={
             }else{
                 db.get().collection(collection.ORDER_COLLECTION).updateOne(
                     {_id:objectId(id)},
-                    {$set:{trackstatus:track_status}})
+                    {$set:{tracking:tracking,tstatus:tstatus}})
                     console.log("status updated")
                     reslove()
             }
         })
-    },getAllusers(){
+    },
+    getAllusers(){
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.USER_COLLECTION).find({},{projection:{password:0}}).toArray().then((data)=>{
                 console.log(data)
@@ -113,6 +121,7 @@ module.exports={
             })
         })
     }
+    
 }
 
 

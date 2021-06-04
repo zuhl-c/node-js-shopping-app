@@ -136,10 +136,12 @@ function razorpayPayment(order){
              }
          }
          function update(width){
+            var TO=document.getElementById('TO-status')
             var elem=document.getElementById("status-bar");
             if(elem.style.width==25&&width==25){
                 width=25;
                 elem.style.width=width+"%";
+
             }else if(elem.style.width=="25%"&&width==25){
                 width=50;
                 elem.style.width =width+"%";

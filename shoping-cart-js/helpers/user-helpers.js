@@ -494,4 +494,27 @@ module.exports={
             }
         })
     },
+    async cancelRequest(data){
+        let alert ={
+            type:"cancel-request",
+            orderid:data.id,
+            reason:data.reason,
+            time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
+        }
+        let check =await db.get().collection(collection.ALERTS).findOne({orderid:data.id})
+        if(check){
+            console.log('already request recieved')
+        }else{
+            return new Promise((resolve,reject)=>{
+                db.get().collection(collection.ALERTS).insertOne(alert,function(err,data){
+                    if(data){
+                        resolve('cancellation request success')
+                    }else{
+                        reject('cancellation request failed')
+                    }
+                })
+            })
+            
+        }
+    }
 }

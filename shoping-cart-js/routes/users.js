@@ -250,5 +250,16 @@ router.get('/view-orders',verifyLogin,async(req,res)=>{
 //   res.render('users/view-ordered-products',{userId,orderedProducts,cartCount})
 
 // })
+router.post('/cancel-order',(req,res)=>{
+  console.log(req.body)
+  userHelpers.cancelRequest(req.body).then((response)=>{
+    console.log(response)
+    res.json({status:true})
+
+  }).catch((err)=>{
+    console.log(err)
+    res.json({status:false})
+  })
+})
 
 module.exports = router;

@@ -7,7 +7,8 @@ var router = express.Router();
 const productHelpers = require('../helpers/product-helpers')
 const adminHelpers =require('../helpers/admin-helpers');
 const sharp = require('sharp');
-const fs =require('fs')
+const fs =require('fs');
+const { response } = require('express');
 var header=true;
 var admin=true;
 //checking admin loggedIn//
@@ -133,5 +134,6 @@ router.get('/all-users',verifyAdmin,async function(req,res){
   let customers= await adminHelpers.getAllusers()
   res.render('admin/view-users',{customers,admin,header})
 })
+
 
 module.exports = router;
