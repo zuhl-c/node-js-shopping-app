@@ -262,4 +262,10 @@ router.post('/cancel-order',(req,res)=>{
   })
 })
 
+router.get('/alerts',verifyLogin,async(req,res)=>{
+  let userId=req.session.user._id;
+  let alerts= await userHelpers.getAlerts(userId)
+  res.render('users/alerts-user',{userId,cartCount,alerts})
+})
+
 module.exports = router;

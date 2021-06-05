@@ -1,0 +1,25 @@
+<section>
+    <div class="container">
+        {{#each alerts}}
+        <div class="row">
+            <div class="col-md-8 m-auto">
+                <div class="mt-2">
+                    <div class="cart-card">
+                        <div class="card-body">
+                            <h6 class="fw-bold text-uppercase text-danger">{{this.type}}</h6>
+                             <h6>Time : {{this.time}}</h6>
+                            <h6>Order Id : <span class="fw-bold">{{this.orderid}}</span></h6>
+                            <p>Message : {{this.reason}}</p>
+                            {{#if cancelled}}
+                            <h6 class="text-success fw-bold">Cancelled <a href="/admin/view-order?id={{this.orderid}}" class="btn btn-outline-dark pc"> view</a></h6>
+                            {{else}}
+                            <a href="/admin/view-order?id={{this.orderid}}" class="btn btn-outline-danger pc">Take Action</a>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>

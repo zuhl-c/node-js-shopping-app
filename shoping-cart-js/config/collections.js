@@ -5,5 +5,6 @@ module.exports={
     CART_COLLECTION:'cart',
     ORDER_COLLECTION:'order',
     ALERTS:'alerts',
+    USERINBOX:'inbox',
     NOTIFICATION:'notification'
 }

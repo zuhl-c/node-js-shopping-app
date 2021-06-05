@@ -405,7 +405,7 @@ module.exports={
     },
     getOrders:(userId)=>{
         return new Promise(async(resolve,reject)=>{
-            let orders=await db.get().collection(collection.ORDER_COLLECTION).find({userId:objectId(userId)}).toArray()
+            let orders=await db.get().collection(collection.ORDER_COLLECTION).find({userId:objectId(userId)}).sort({date:-1}).toArray()
             resolve(orders)
             console.log(orders)
         })
@@ -496,7 +496,7 @@ module.exports={
     },
     async cancelRequest(data){
         let alert ={
-            type:"cancel-request",
+            type:"cancel request",
             orderid:data.id,
             reason:data.reason,
             time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
@@ -516,5 +516,13 @@ module.exports={
             })
             
         }
+    },
+    getAlerts(id){
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USERINBOX).find({user:id}).sort({time: -1}).toArray().then((inbox)=>{
+                console.log(inbox)
+                resolve(inbox)
+            })
+        })
     }
 }

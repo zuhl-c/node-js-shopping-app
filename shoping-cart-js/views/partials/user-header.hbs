@@ -18,12 +18,14 @@
                     </li>
                     {{/if}}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/cart"><i class="fas fa-shopping-cart"></i> Cart <span
-                                class="badge text-white" id="cart-count">{{cartCount}}</span></a>
+                        <a class="nav-link text-white" href="/cart"><i class="fas fa-shopping-cart"></i> Cart <span 
+                        class="badge text-white" id="cart-count">{{cartCount}}</span></a>
                     </li>
                     {{#if userId }}
-                    <li class="nav-item"><a class="nav-link text-white" href="/profile"> <i class="fas fa-user-alt"></i>
-                            Account</a>
+                    <li class="nav-item"><a class="nav-link text-white" href="/profile"> <i class="fas fa-user-alt"></i>Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/alerts"><i class="fas fa-bell"></i> Alerts</a>
                     </li>
                     {{/if}}
                 </ul>

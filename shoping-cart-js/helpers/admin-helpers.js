@@ -7,6 +7,25 @@ var objectId=require('mongodb').ObjectID;
 const bcrypt=require('bcrypt')
 const date = require('date-and-time');
 
+class Message{
+
+    async makeCancelMessage(orderid,userid){
+        var message={
+            type:'order cancellation',
+            order:orderid,
+            user:userid,
+            content:'your order has been cancelled',
+            time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
+        }
+        db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
+            if(data){
+                console.log('order cancelled message inserted')
+            }else{
+                console.log(err)
+            }
+        })
+    }
+}
 
 async function makeadmin() {
     var Admin = {name:'zuhl-c',phone:8086900574,password:'zuhl-c/github'}
@@ -21,6 +40,7 @@ async function makeadmin() {
         
     })
 }
+
 
 module.exports={
     adminLogin(logindata){
@@ -120,8 +140,30 @@ module.exports={
                 resolve(data)
             })
         })
+    },
+    getAlerts(){
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ALERTS).find().sort({time: -1}).toArray().then((response)=>{
+                console.log(response)
+                resolve(response)
+            })
+        })
+    },
+    cancelOrder(data){
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(data.orderid)},{
+                $set:{status:'cancelled',cancelled:date.format(new Date(), 'DD-MM-YYYY hh:mm A')}
+            }).then(()=>{
+                console.log('order cancelled ' + data.orderid)
+                var message =new Message()
+                message.makeCancelMessage(data.orderid,data.userid)
+                db.get().collection(collection.ALERTS).updateOne({orderid:data.orderid},{
+                    $set:{'cancelled':true}
+                })
+                resolve()
+            })
+        })
     }
-    
 }
 
 

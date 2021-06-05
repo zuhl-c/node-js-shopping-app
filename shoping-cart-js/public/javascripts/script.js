@@ -135,6 +135,8 @@ function razorpayPayment(order){
                 location.href='/search/'+keyword;
              }
          }
+
+
          function update(width){
             var TO=document.getElementById('TO-status')
             var elem=document.getElementById("status-bar");
@@ -158,6 +160,8 @@ function razorpayPayment(order){
                 elem.style.width=width+"%";
             }
         }
+
+
         function statusconfirm(){
             var value=document.getElementById('status-bar').style.width;
             var Id=document.getElementById('orderid').innerHTML;
@@ -172,4 +176,40 @@ function razorpayPayment(order){
                 }
             })
         }
-       
+
+        
+        $("#cancelReq").submit(function(e){
+            e.preventDefault()
+            $.ajax({
+                url:'/cancel-order',
+                data:$('#cancelReq').serialize(),
+                method:'post',
+                success:function(response){
+                    if(response.status){
+                        $('#cancel-req').modal('hide')
+                        $('#req_sended').modal('toggle')
+                        $('#req_btn').prop('disabled', true);
+                    }else{
+                        location.reload()
+                    }
+                }
+            })
+        })
+
+
+        function cancelOrder(id,user){
+            $.ajax({
+                url:'/admin/cancel-order',
+                data:{
+                    orderid:id,
+                    userid:user
+                },
+                method:'post',
+                success:function(response){
+                    if(response.status){
+                        $('#req_cancel').modal('hide')
+                        $('#res_success').modal('toggle')
+                    }
+                }
+            })
+        }
