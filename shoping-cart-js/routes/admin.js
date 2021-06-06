@@ -4,11 +4,12 @@
 //modules importing//
 var express = require('express');
 var router = express.Router();
-const productHelpers = require('../helpers/product-helpers')
-const adminHelpers =require('../helpers/admin-helpers');
+const productHelpers = require('../helpers/product')
+const adminHelpers =require('../helpers/admin');
 const sharp = require('sharp');
 const fs =require('fs');
 const { response } = require('express');
+
 var header=true;
 var admin=true;
 //checking admin loggedIn//

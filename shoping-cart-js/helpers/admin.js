@@ -7,7 +7,6 @@ var Message=require('./messages')
 var objectId=require('mongodb').ObjectID;
 const bcrypt=require('bcrypt')
 const date = require('date-and-time');
-
 var message=new Message()
 
 async function makeadmin() {
@@ -75,7 +74,7 @@ module.exports={
     changeStatus(data){
         var id=data.id;
         var status=data.value;
-        var status;
+        var tstatus;
         var tracking;
         var deliverd;
         //console.log(status)

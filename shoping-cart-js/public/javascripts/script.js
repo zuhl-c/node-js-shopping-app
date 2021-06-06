@@ -73,6 +73,7 @@ $("#checkout-form").submit((e)=>{
                 $('#failed').modal('toggle')
             }
             else{
+                //console.log(response)
                 razorpayPayment(response)
             }
         }
@@ -101,12 +102,46 @@ function razorpayPayment(order){
             "address": "Razorpay Corporate Office"
         },
         "theme": {
-            "color": "#3399cc"
+            "color": "#3333cc"
+        },
+        "modal": {
+            "ondismiss": function(){
+                console.log('Checkout form closed');
+                var closed =true;
+                cancelTransfer(order,closed)
+            }
         }
-        };
+        }
         var rzp1 = new Razorpay(options);
         rzp1.open();
+        rzp1.on('payment.failed', function (response){
+            // alert(response.error.code);
+            // alert(response.error.description);
+            // alert(response.error.source);
+            // alert(response.error.step);
+            // alert(response.error.reason);
+            // alert(response.error.metadata.order_id);
+            // alert(response.error.metadata.payment_id);
+            
+        })
     }
+    function cancelTransfer(Data,closed) {
+        if(closed){
+            $.ajax({
+                url:'/cancel-transaction',
+                data:Data,
+                method:'post',
+                success:function(response){
+                    //alert(response)
+                    $('#failed').modal('toggle')
+                }
+            })
+        }else{
+            console.log('not access')
+        }
+    }
+
+
     function verifyPayment(payment,order){
         $.ajax({
             url:'/verify-payment',

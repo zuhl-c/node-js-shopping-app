@@ -6,6 +6,7 @@
                 <div class="mt-2">
                     <div class="cart-card">
                         <div class="card-body text-center">
+                            <h6 id="inUser" hidden>{{this.user}}</h6>
                             <h6 class="fw-bold text-uppercase">{{this.type}}</h6>
                              <h6 style="font-size: 14px;">Time : {{this.time}}</h6>
                              <h6 style="font-size: 14px;">Order Id : <span class="">{{this.order}}</span></h6>
@@ -18,3 +19,16 @@
         {{/each}}
     </div>
 </section>
+<script>
+    window.onload=function(){
+       var user= $('#inUser').html();
+       console.log(user)
+       $.ajax({
+           url:'/read-message/'+user,
+           method:'put',
+           success:function(response){
+               console.log(response)
+           }
+       })
+    }
+</script>

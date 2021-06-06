@@ -2,12 +2,19 @@
 /* for more details :github/zuhl-c*/
 
 //importing modules//
+const { response } = require('express')
 var express = require('express')
 const session = require('express-session')
+const Message = require('../helpers/messages')
 var router = express.Router()
-const productHelpers = require('../helpers/product-helpers')
-const userHelpers = require('../helpers/user-helpers')
-var cartCount;
+const productHelpers = require('../helpers/product')
+const userHelpers = require('../helpers/user')
+var message =new Message()
+
+async function Count(id) {
+  var count= await userHelpers.getCartCount(id)
+  return count;
+}
 
 //function starting//
 const verifyLogin=(req,res,next)=>{//login case checking function middleware
@@ -22,23 +29,27 @@ const verifyLogin=(req,res,next)=>{//login case checking function middleware
 router.get('/', async function(req, res, next){
   let user=req.session.user;//creating user and assign session(userdata) after loggedin
   if(user){
-    var userId=user._id;//after only passing id to client//
-    cartCount=  await userHelpers.getCartCount(userId)
+    var userId=user._id;
+    var cartCount = await Count(userId)
+    var notif = await message.GetNotif(userId)
+    console.log(notif)
   }else{
     cartCount = null;
   }
   productHelpers.getAllProducts().then((products)=>{
-    res.render('users/index',{products,userId,cartCount})//sending user and products to view engine
+    res.render('users/index',{products,userId,cartCount,notif})//sending user and products to view engine
   })
 })
 //product view//
-router.get('/view-item/:id',(req,res)=>{
+router.get('/view-item/:id',async (req,res)=>{
   //console.log(req.params.id)
   if(req.session.user){
     var userId=req.session.user._id;
+    var cartCount = await Count(userId)
+    var notif = await message.GetNotif(userId)
   }
   productHelpers.viewItem(req.params.id).then((product)=>{
-    res.render('users/view-item',{product,userId,cartCount})
+    res.render('users/view-item',{product,userId,cartCount,notif})
   })
 })
 //search product//
@@ -119,6 +130,7 @@ router.get('/profile' ,verifyLogin,async(req,res)=>{
   var user=await userHelpers.pickAddress(userId)
   //req.session.user=user;
   //console.log(user)
+  var cartCount = await Count(userId)
   res.render('users/user-profile',{userId,user,cartCount})
 
 })
@@ -146,6 +158,7 @@ router.post('/add-address',verifyLogin,(req,res)=>{
 router.get('/cart',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let user=req.session.user;
+  var cartCount = await Count(userId)
   userHelpers.findCart(userId).then(async(response)=>{
       let products = await userHelpers.getCartProducts(userId)
       let total = await userHelpers.getTotalAmount(userId)
@@ -210,7 +223,7 @@ router.post('/place-order',async(req,res)=>{
       console.log('cash on delivery')
       res.json({CODsuccess:true})
     }else{
-      userHelpers.generateRazorPay(orderId,totalPrice,userId).then((response)=>{
+      userHelpers.generateRazorPay(orderId,totalPrice).then((response)=>{
         res.json(response)
         console.log(response)
       }).catch((err)=>{
@@ -220,6 +233,13 @@ router.post('/place-order',async(req,res)=>{
     }
   })
 })
+router.post('/cancel-transaction',(req,res)=>{
+  var userId=req.session.user._id
+  userHelpers.cancelTransaction(req.body,userId).then((response)=>{
+    res.json(response)
+  })
+})
+
 //verify payment//
 router.post('/verify-payment',(req,res)=>{
   //recieving razorpay order id,payment id,signature and order details,amount,currency,status,reciept//
@@ -230,7 +250,7 @@ router.post('/verify-payment',(req,res)=>{
     res.json({status:true})
     console.log('payment successfull')
   }).catch((err)=>{
-    res.json({status:false})
+    res.json(err)
     console.log('payment failed')
   })
 })
@@ -243,6 +263,7 @@ router.post('/verify-payment',(req,res)=>{
 router.get('/view-orders',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let orders=await userHelpers.getOrders(userId)
+  var cartCount = await Count(userId)
   res.render('users/orders',{userId,orders,cartCount})
 })
 
@@ -264,7 +285,13 @@ router.post('/cancel-order',(req,res)=>{
 router.get('/inbox',verifyLogin,async(req,res)=>{
   let userId=req.session.user._id;
   let inbox= await userHelpers.getInbox(userId)
+  var cartCount = await Count(userId)
   res.render('users/inbox-user',{userId,cartCount,inbox})
+})
+
+router.put('/read-message/:id',verifyLogin,(req,res)=>{
+  console.log(req.params.id)
+  message.ReadInbox(req.params.id)
 })
 
 module.exports = router;

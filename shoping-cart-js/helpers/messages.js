@@ -105,6 +105,13 @@ class Message{
              }
          })
      }
+     ReadInbox(userid){
+         db.get().collection(collection.USERINBOX).updateMany({user:objectId(userid)},{$set:{read:true}})
+     }
+     async GetNotif(userid){
+         let unread = await db.get().collection(collection.USERINBOX).find({user:objectId(userid),read:{$exists:false}}).toArray()
+         return unread.length;
+     }
 }
 
 module.exports= Message;
