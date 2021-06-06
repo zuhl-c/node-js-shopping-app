@@ -135,9 +135,9 @@ router.get('/all-users',verifyAdmin,async function(req,res){
   res.render('admin/view-users',{customers,admin,header})
 })
 
-router.get('/alerts',verifyAdmin,async function(req,res){
-  let alerts = await adminHelpers.getAlerts()
-  res.render('admin/alerts',{alerts,admin,header})
+router.get('/inbox',verifyAdmin,async function(req,res){
+  let inbox = await adminHelpers.getInbox()
+  res.render('admin/inbox',{inbox,admin,header})
 })
 router.post('/cancel-order',function(req,res){
   console.log(req.body)

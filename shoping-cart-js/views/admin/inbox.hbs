@@ -1,19 +1,19 @@
 <section>
-    <div class="container">
-        {{#each alerts}}
+    <div class="container mb-5">
+        {{#each inbox}}
         <div class="row">
             <div class="col-md-8 m-auto">
                 <div class="mt-2">
                     <div class="cart-card">
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <h6 class="fw-bold text-uppercase text-danger">{{this.type}}</h6>
-                             <h6>Time : {{this.time}}</h6>
-                            <h6>Order Id : <span class="fw-bold">{{this.orderid}}</span></h6>
-                            <p>Message : {{this.reason}}</p>
+                             <h6 style="font-size: 14px;">Time : {{this.time}}</h6>
+                            <h6 style="font-size: 14px;">Order Id : <span class="fw-bold">{{this.order}}</span></h6>
+                            <h6 style="font-size: 15px;">Message : {{this.reason}}</h6>
                             {{#if cancelled}}
                             <h6 class="text-success fw-bold">Cancelled <a href="/admin/view-order?id={{this.orderid}}" class="btn btn-outline-dark pc"> view</a></h6>
                             {{else}}
-                            <a href="/admin/view-order?id={{this.orderid}}" class="btn btn-outline-danger pc">Take Action</a>
+                            <a href="/admin/view-order?id={{this.order}}" class="btn btn-outline-danger pc">Take Action</a>
                             {{/if}}
                         </div>
                     </div>

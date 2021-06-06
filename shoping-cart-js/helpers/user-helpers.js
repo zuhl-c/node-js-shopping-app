@@ -11,6 +11,9 @@ var objectId=require('mongodb').ObjectID;
 const productHelpers = require('./product-helpers')
 const Razorpay =require('razorpay')
 const date = require('date-and-time');
+const Message = require('./messages')
+var message = new Message()
+
 var instance = new Razorpay({
     key_id: 'rzp_test_uWu157JMmfMDhI',
     key_secret: 'u4SJ2vhKNTU6cbNS6JEra6Pi',
@@ -470,7 +473,7 @@ module.exports={
             })
         })
     },
-    verifyPayment:(details)=>{
+    verifyPayment:(details,userId)=>{
         return new Promise((resolve,reject)=>{
             const crypto = require('crypto')
             //creating hmac hash key using razorpay secret key //
@@ -495,31 +498,16 @@ module.exports={
         })
     },
     async cancelRequest(data){
-        let alert ={
-            type:"cancel request",
-            orderid:data.id,
-            reason:data.reason,
-            time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
-        }
-        let check =await db.get().collection(collection.ALERTS).findOne({orderid:data.id})
+        let check =await db.get().collection(collection.INBOX).findOne({order:objectId(data.id)})
         if(check){
             console.log('already request recieved')
         }else{
-            return new Promise((resolve,reject)=>{
-                db.get().collection(collection.ALERTS).insertOne(alert,function(err,data){
-                    if(data){
-                        resolve('cancellation request success')
-                    }else{
-                        reject('cancellation request failed')
-                    }
-                })
-            })
-            
+            message.MakeCancelRequest(data.id,data.reason)
         }
     },
-    getAlerts(id){
+    getInbox(id){
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.USERINBOX).find({user:id}).sort({time: -1}).toArray().then((inbox)=>{
+            db.get().collection(collection.USERINBOX).find({user:objectId(id)}).sort({time: -1}).toArray().then((inbox)=>{
                 console.log(inbox)
                 resolve(inbox)
             })

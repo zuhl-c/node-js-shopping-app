@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="mx-auto my-5 ">
                     <div class="card cart-card">
-                        <div class="card-body">
+                        <div class="card-body" >
                             <div class="row">
                                 <div class="col-md-6 p-2">
                                     <b> Order ID : <span id="orderid">{{details._id}}</span></b>
@@ -16,7 +16,7 @@
                                     <h6 class="fw-bold p-2">Address :</h6>
                                     <div class="card">
                                         <div class="card-body">
-                                            <h6> User ID : <span>{{details.userId}}</span></h6>
+                                            <h6> User ID : <span id="userid">{{details.userId}}</span></h6>
                                             <h6> Name : <span>{{details.deliveryAddress.fullname}}</span></h6>
                                             <h6> Phone : <span>{{details.deliveryAddress.phone}}</span></h6>
                                             <h6> State : <span>{{details.deliveryAddress.state}}</span></h6>
@@ -61,7 +61,7 @@
                                                     style="font-size: 15px;" onclick="statusconfirm()">confirm</button>
                                             </div>
                                              <div class="btn pt-4">
-                                                <button class="btn btn-outline-danger fw-bold"  data-bs-toggle="modal" data-bs-target="#req_cancel"
+                                                <button class="btn btn-outline-danger fw-bold" id="cancelbtn" data-bs-toggle="modal" data-bs-target="#req_cancel"
                                                     style="font-size: 15px;"  >cancel order</button>
                                             </div>
                                         </div>
@@ -141,6 +141,11 @@
                 document.getElementById("order_status").style.color='#198754';
                 $('#update').prop('disabled', true);
                 $('#confirm').prop('disabled', true);
+            }else if(cond=="cancelled"){
+                document.getElementById("order_status").style.color='#dc3545';
+                $('#update').prop('disabled', true);
+                $('#confirm').prop('disabled', true);
+                $('#cancelbtn').prop('disabled', true);
             }
             else{
                 document.getElementById("order_status").style.color='#dc3545';

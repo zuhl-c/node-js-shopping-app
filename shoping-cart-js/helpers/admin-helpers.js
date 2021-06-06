@@ -3,29 +3,12 @@
 
 var collection=require('../config/collections')
 var db=require('../config/connection')
+var Message=require('./messages')
 var objectId=require('mongodb').ObjectID;
 const bcrypt=require('bcrypt')
 const date = require('date-and-time');
 
-class Message{
-
-    async makeCancelMessage(orderid,userid){
-        var message={
-            type:'order cancellation',
-            order:orderid,
-            user:userid,
-            content:'your order has been cancelled',
-            time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
-        }
-        db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
-            if(data){
-                console.log('order cancelled message inserted')
-            }else{
-                console.log(err)
-            }
-        })
-    }
-}
+var message=new Message()
 
 async function makeadmin() {
     var Admin = {name:'zuhl-c',phone:8086900574,password:'zuhl-c/github'}
@@ -40,7 +23,6 @@ async function makeadmin() {
         
     })
 }
-
 
 module.exports={
     adminLogin(logindata){
@@ -93,26 +75,30 @@ module.exports={
     changeStatus(data){
         var id=data.id;
         var status=data.value;
+        var status;
         var tracking;
-        var tStatus;
         var deliverd;
         //console.log(status)
         if(status=="25%"){
             tracking="25%";
             tstatus="processing"
+            message.makePlaceMessage(data.id,data.user)
         }
         else if(status=="50%"){
             tracking="50%";
             tstatus="shipped"
+            message.makeShipMessage(data.id,data.user)
         }
         else if(status=="75%"){
             tracking="75%";
             tstatus="out of delivery"
+            message.makeOutOfDelMessage(data.id,data.user)
         }
         else if(status=="100%"){
             tracking="100%";
             tstatus="delivered"
             deliverd=true;
+            message.makeDeliveryMessage(data.id,data.user)
         }
         return new Promise(async(reslove,reject)=>{
             if(deliverd){
@@ -120,6 +106,7 @@ module.exports={
                     {_id:objectId(id)},
                     {$set:{tracking:tracking,
                         status:'delivered',
+                        tstatus:tstatus,
                         delivered:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
                     }})
                     console.log("status updated to delivery")
@@ -141,9 +128,9 @@ module.exports={
             })
         })
     },
-    getAlerts(){
+    getInbox(){
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.ALERTS).find().sort({time: -1}).toArray().then((response)=>{
+            db.get().collection(collection.INBOX).find().sort({time: -1}).toArray().then((response)=>{
                 console.log(response)
                 resolve(response)
             })
@@ -155,9 +142,8 @@ module.exports={
                 $set:{status:'cancelled',cancelled:date.format(new Date(), 'DD-MM-YYYY hh:mm A')}
             }).then(()=>{
                 console.log('order cancelled ' + data.orderid)
-                var message =new Message()
                 message.makeCancelMessage(data.orderid,data.userid)
-                db.get().collection(collection.ALERTS).updateOne({orderid:data.orderid},{
+                db.get().collection(collection.INBOX).updateOne({order:objectId(data.id)},{
                     $set:{'cancelled':true}
                 })
                 resolve()

@@ -4,7 +4,6 @@ module.exports={
     PRODUCT_COLLECTION:'product',
     CART_COLLECTION:'cart',
     ORDER_COLLECTION:'order',
-    ALERTS:'alerts',
     USERINBOX:'inbox',
-    NOTIFICATION:'notification'
+    INBOX:'admin inbox'
 }

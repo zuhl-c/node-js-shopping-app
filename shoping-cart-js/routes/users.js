@@ -224,8 +224,9 @@ router.post('/place-order',async(req,res)=>{
 router.post('/verify-payment',(req,res)=>{
   //recieving razorpay order id,payment id,signature and order details,amount,currency,status,reciept//
   //passing this details to verifypayment //
+  let userId =req.session.user._id;
   console.log(req.body)
-  userHelpers.verifyPayment(req.body).then(()=>{
+  userHelpers.verifyPayment(req.body,userId).then(()=>{
     res.json({status:true})
     console.log('payment successfull')
   }).catch((err)=>{
@@ -253,19 +254,17 @@ router.get('/view-orders',verifyLogin,async(req,res)=>{
 router.post('/cancel-order',(req,res)=>{
   console.log(req.body)
   userHelpers.cancelRequest(req.body).then((response)=>{
-    console.log(response)
     res.json({status:true})
-
   }).catch((err)=>{
     console.log(err)
     res.json({status:false})
   })
 })
 
-router.get('/alerts',verifyLogin,async(req,res)=>{
+router.get('/inbox',verifyLogin,async(req,res)=>{
   let userId=req.session.user._id;
-  let alerts= await userHelpers.getAlerts(userId)
-  res.render('users/alerts-user',{userId,cartCount,alerts})
+  let inbox= await userHelpers.getInbox(userId)
+  res.render('users/inbox-user',{userId,cartCount,inbox})
 })
 
 module.exports = router;

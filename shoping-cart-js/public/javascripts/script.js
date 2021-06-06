@@ -165,9 +165,10 @@ function razorpayPayment(order){
         function statusconfirm(){
             var value=document.getElementById('status-bar').style.width;
             var Id=document.getElementById('orderid').innerHTML;
+            var user=document.getElementById('userid').innerHTML;
             $.ajax({
                 url:'/admin/change-status',
-                data:{id:Id,value:value},
+                data:{id:Id,user:user,value:value},
                 method:'post',
                 success:(response)=>{
                     if(response.status){
