@@ -6,12 +6,12 @@ var collection=require('../config/collections');
 const objectId=require('mongodb').ObjectID;
 var  date = require('date-and-time');
 var Razorpay=require('razorpay');
+const { USER_COLLECTION } = require('../config/collections');
 
 var instance = new Razorpay({
     key_id: 'rzp_test_uWu157JMmfMDhI',
     key_secret: 'u4SJ2vhKNTU6cbNS6JEra6Pi',
   });
-
 
   module.exports={
 
@@ -57,6 +57,7 @@ var instance = new Razorpay({
                 await db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(userId)})
                 console.log('cart itmes removed ')
                 resolve()
+                saveThePayment(details,userId)
 
             }else{
                 console.log('payment verification failed')
@@ -66,4 +67,69 @@ var instance = new Razorpay({
             }
         })
     }
+  }
+
+  async function saveThePayment(details,userId) {
+
+      let paymentID=details['payment[razorpay_payment_id]']
+      let paymentOdrId=details['payment[razorpay_order_id]']
+      let paySign=details['payment[razorpay_signature]']
+      let username=details['order[user][name]']
+    //   let userphone = parseInt(details['order[[order[user][phone]]'])
+    //   let useremail=details['order[order[user][email]]']
+      var payOrderData;
+      var paymentData;
+
+      let getUser = await db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userId)},{projection:{password:0,Address:0}})
+
+      await instance.orders.fetch(paymentOdrId, function (err,data){
+          if(data){
+            payOrderData=data;
+          }else{
+              console.log(err)
+          }
+      })
+
+     await  instance.payments.fetch(paymentID, function (err,data){
+        if(data){
+            paymentData=data;
+        }else{
+            console.log(err)
+        }
+    })
+
+      console.log(payOrderData)
+      console.log(paymentData)
+
+      const PAYMENTDATA={
+
+          order_id:payOrderData.id,
+          payment_id:paymentData.id,
+          signature:paySign,
+          amount:payOrderData.amount/100,
+          currency:payOrderData.currency,
+          status:payOrderData.status,
+          amount_paid:paymentData.amount/100,
+          method:paymentData.method,
+          pay_attempts:payOrderData.attempts,
+          receipt:objectId(payOrderData.receipt),
+          paided_email:paymentData.email,
+          paided_phone:parseInt(paymentData.contact),
+          paided_customer:username,
+          user_name:getUser.name,
+          user_phone:getUser.phone,
+          user_email:getUser.email
+
+      }
+      if(PAYMENTDATA){
+        db.get().collection(collection.PAYMENT).insertOne(PAYMENTDATA,function(err,data){
+            if(data){
+                console.log('payment saved')
+            }else{
+                console.log(err)
+            }
+        })
+      }else{
+          console.log('payment data not found')
+      }
   }

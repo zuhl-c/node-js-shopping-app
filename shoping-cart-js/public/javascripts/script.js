@@ -94,15 +94,15 @@ function razorpayPayment(order){
             verifyPayment(response,order)
         },
         "prefill": {
-            "name": "zuhailpm",
-            "email": "zuhailzed@gmail.com",
-            "contact": "8086900574"
+            "name": order.user.name,
+            "email": order.user.email,
+            "contact": order.user.phone
         },
         "notes": {
             "address": "Razorpay Corporate Office"
         },
         "theme": {
-            "color": "#3333cc"
+            "color": "#212529"
         },
         "modal": {
             "ondismiss": function(){

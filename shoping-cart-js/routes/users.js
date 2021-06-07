@@ -225,6 +225,13 @@ router.post('/place-order',async(req,res)=>{
       res.json({CODsuccess:true})
     }else{
       Service.generateRazorPay(orderId,totalPrice).then((response)=>{
+        response.user=req.session.user
+        let userData={
+          name:user.name,
+          email:user.email,
+          phone:user.phone
+        }
+        response.user=userData;
         res.json(response)
         console.log(response)
       }).catch((err)=>{
