@@ -3,7 +3,7 @@
 
 var collection=require('../config/collections')
 var db=require('../config/connection')
-var Message=require('./messages')
+var Message=require('../service/messages')
 var objectId=require('mongodb').ObjectID;
 const bcrypt=require('bcrypt')
 const date = require('date-and-time');
@@ -127,14 +127,6 @@ module.exports={
             })
         })
     },
-    getInbox(){
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.INBOX).find().sort({time: -1}).toArray().then((response)=>{
-                console.log(response)
-                resolve(response)
-            })
-        })
-    },
     cancelOrder(data){
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(data.orderid)},{
@@ -148,6 +140,10 @@ module.exports={
                 resolve()
             })
         })
+    },
+    async getUser(id){
+        let user =db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(id)},{projection:{password:0,_id:0,Address:0}})
+        return user;
     }
 }
 

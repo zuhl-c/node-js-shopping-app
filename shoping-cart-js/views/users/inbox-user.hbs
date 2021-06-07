@@ -1,5 +1,6 @@
 <section>
     <div class="container mb-5">
+        {{#if inbox}}
         {{#each inbox}}
         <div class="row">
             <div class="col-md-8 m-auto">
@@ -17,11 +18,18 @@
             </div>
         </div>
         {{/each}}
+        {{else}}
+      <div class="d-flex align-items-center justify-content-center" style="height: 350px">
+            <h4 class=" p-2 fw-bold">No Messages</h4>
+            <a href="/" class="">&leftarrow;</a>
+      </div>
+        {{/if}}
     </div>
 </section>
 <script>
     window.onload=function(){
-       var user= $('#inUser').html();
+        if('{{inbox}}'){
+            var user= $('#inUser').html();
        console.log(user)
        $.ajax({
            url:'/read-message/'+user,
@@ -30,5 +38,8 @@
                console.log(response)
            }
        })
+        }else{
+            console.log('no messages')
+        }
     }
 </script>

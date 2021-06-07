@@ -4,14 +4,17 @@
 //modules importing//
 var express = require('express');
 var router = express.Router();
-const productHelpers = require('../helpers/product')
-const adminHelpers =require('../helpers/admin');
+const productControl = require('../controller/productControl');
+const adminControl =require('../controller/adminControl');
 const sharp = require('sharp');
 const fs =require('fs');
 const { response } = require('express');
+const Message = require('../service/messages');
 
+var message=new Message()
 var header=true;
 var admin=true;
+
 //checking admin loggedIn//
 function verifyAdmin(req,res,next) {
   if(req.session.LoggedIn&&req.session.admin){
@@ -23,21 +26,21 @@ function verifyAdmin(req,res,next) {
 
 // GET admin listing//
 router.get('/',verifyAdmin,async function(req, res) {
-  let products = await productHelpers.getAllProducts()
+  let products = await productControl.getAllProducts()
   console.log(products)
   res.render('admin/view-products',{admin,header,products})
 
 })
 //admin login//
-router.post('/admin-login',async(req,res)=>{
-  adminHelpers.adminLogin(req.body).then((status)=>{
+router.post('/admin-login',async function(req,res){
+  adminControl.adminLogin(req.body).then(async function (status){
     if(status.pswrd){
       req.session.admin=status.data;
       req.session.LoggedIn=true;
       console.log('admin login')
       res.redirect('/admin')
     }
-  }).catch((err)=>{
+  }).catch( function (err){
     console.log(err)
     res.render('admin/admin-login',{err,admin})
   })
@@ -55,7 +58,7 @@ router.get('/add-product',verifyAdmin,function(req,res){
 })
 
 router.post('/add-product', function(req,res){
-  productHelpers.addProduct(req.body).then(async(id)=>{
+  productControl.addProduct(req.body).then(async function (id){
     await sharp(req.files.image.data).resize(640,640).toFile('./public/images/'+id+'.png')
     res.redirect('/admin')
     //console.log(req.files)/
@@ -65,14 +68,14 @@ router.post('/add-product', function(req,res){
 //edit product//
 router.get('/edit-product',verifyAdmin, async function(req,res){
   //console.log(req.query)
-  let product= await productHelpers.getProductDetails(req.query.id)
+  let product= await productControl.getProductDetails(req.query.id)
   res.render('admin/edit-product',{product,header,admin})
   console.log('product details collected')
 
 })
 
 router.post('/edit-product/:id',function(req,res){
-  productHelpers.updateProduct(req.params.id,req.body).then(()=>{
+  productControl.updateProduct(req.params.id,req.body).then(function (){
     let id =req.params.id;
     if(req.files){
      sharp(req.files.image.data).resize(640,640).toFile('./public/images/'+id+'.png')
@@ -99,7 +102,7 @@ router.post('/edit-product/:id',function(req,res){
 //delete product//
 router.get('/delete-product/:id',verifyAdmin,function(req,res){
   let productId=req.params.id;
-  productHelpers.deleteProduct(productId).then((response)=>{
+  productControl.deleteProduct(productId).then(function (response){
     if(response){
       console.log('product deleted')
     res.redirect('/admin/')
@@ -110,8 +113,8 @@ router.get('/delete-product/:id',verifyAdmin,function(req,res){
   })
 })
 //all orders//
-router.get('/all-orders',verifyAdmin,async function (req,res) {
- let orders = await adminHelpers.getAllorders()
+router.get('/all-orders',verifyAdmin,async function (req,res){
+ let orders = await adminControl.getAllorders()
  console.log(orders)
  res.render('admin/all-orders',{orders,header,admin})
 
@@ -119,30 +122,37 @@ router.get('/all-orders',verifyAdmin,async function (req,res) {
 //view orders//
 router.get('/view-order',verifyAdmin, async function (req,res) {
   console.log(req.query.id)
-  let details= await adminHelpers.getOrderDetails(req.query.id)
+  let details= await adminControl.getOrderDetails(req.query.id)
   console.log(details)
   res.render('admin/view-order',{admin,header,details})
 })
 //cahnge status//
 router.post('/change-status',function (req,res){
-  adminHelpers.changeStatus(req.body).then((response)=>{
+  adminControl.changeStatus(req.body).then(function(response){
     console.log(response)
     res.json({status:true})
   })
 })
 //all users//
 router.get('/all-users',verifyAdmin,async function(req,res){
-  let customers= await adminHelpers.getAllusers()
+  let customers= await adminControl.getAllusers()
   res.render('admin/view-users',{customers,admin,header})
 })
-
+//get the user//
+router.put('/get-user/:id',verifyAdmin,async function (req,res) {
+  console.log(req.params.id)
+  let user=await adminControl.getUser(req.params.id)
+  res.json(user)
+})
+//admin inbox//
 router.get('/inbox',verifyAdmin,async function(req,res){
-  let inbox = await adminHelpers.getInbox()
+  let inbox = await message.getAdminInbox()
   res.render('admin/inbox',{inbox,admin,header})
 })
+//cancel order//
 router.post('/cancel-order',function(req,res){
   console.log(req.body)
-  adminHelpers.cancelOrder(req.body).then(()=>{
+  adminControl.cancelOrder(req.body).then(function(){
     res.json({status:true})
   })
 })

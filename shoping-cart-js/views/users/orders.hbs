@@ -88,25 +88,12 @@
                 </div>
                 {{/each}}
             </div>
-        {{else}}
-<div class="container">
-    <div class="card cart-card mb-2 mt-2 p-5">
-        <div class="empty-cart">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="m-auto text-center">
-                        <h5><b>Orders Empty</b></h5>
-                        <div class="back-to-shop" style="margin-top: 4.5rem">
-                            <a href="/">&leftarrow;</a>
-                            <span class="text-muted">Back to Home</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {{else}}
+    <div class="d-flex align-items-center justify-content-center" style="height: 350px">
+        <h4 class=" p-2 fw-bold">No Orders</h4>
+        <a href="/" class="">&leftarrow;</a>
     </div>
-</div>
-{{/if}}
+    {{/if}}
 <div class="modal fade" id="cancel-req" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content m-auto card cart-card">

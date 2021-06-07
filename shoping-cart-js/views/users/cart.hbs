@@ -2,25 +2,25 @@
 <section>
 {{#if products}}
 <div class="container">
-    <div class="card cart-card p-5 mt-2 mb-2" id="blur-cart">
+    <div class="card cart-card p-4 mt-2 mb-5">
         <div class="row">
             <div class="col-md-8 cart">
                 <h5 class="mb-5"><b>Items <span>{{products.length}}</span></b></h5>
                 {{#each products}}
                 <div class="row border-top border-bottom">
                     <div class="row main align-items-center">
-                        <div class="col-3"><a href="/view-Item/{{this.product._id}}"><img class="img-fluid"
-                                    src="/images/{{this.product._id}}.png"></a>
+                        <div class="col-3"><a href="/view-Item/{{this.item}}"><img class="img-fluid"
+                                    src="/images/{{this.item}}.png"></a>
                         </div>
                         <div class="col-3">
                             <div class="row fw-bold">{{this.product.name}}</div>
                         </div>
                         <div class="col-3">
                             <button class="btn btn-dark p-1"
-                                onclick="changeQty('{{this._id}}','{{this.product._id}}',-1)">-</button>
-                            <span class="p-2 fw-bold" id="{{this.product._id}}">{{this.quantity}}</span>
+                                onclick="changeQty('{{this._id}}','{{this.item}}',-1)">-</button>
+                            <span class="p-2 fw-bold" id="{{this.item}}">{{this.quantity}}</span>
                             <button class="btn btn-dark p-1"
-                                onclick="changeQty('{{this._id}}','{{this.product._id}}',1)">+</button>
+                                onclick="changeQty('{{this._id}}','{{this.item}}',1)">+</button>
                         </div>
 
                         <div class="col-3 fw-bold">&#8377; <span class="close">{{this.product.price}}</span></div>
@@ -69,22 +69,9 @@
     </div>
 </div>
 {{else}}
-<div class="container">
-    <div class="card cart-card mb-2 mt-2 p-5">
-        <div class="empty-cart">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="m-auto text-center">
-                        <h5><b>Cart Empty</b></h5>
-                        <div class="back-to-shop" style="margin-top: 4.5rem">
-                            <a href="/">&leftarrow;</a>
-                            <span class="text-muted">Back to Home</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="d-flex align-items-center justify-content-center" style="height: 350px">
+    <h4 class=" p-2 fw-bold">No Itmes</h4>
+    <a href="/" class="">&leftarrow;</a>
 </div>
 {{/if}}
 </section>

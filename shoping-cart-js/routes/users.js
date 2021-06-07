@@ -5,14 +5,15 @@
 const { response } = require('express')
 var express = require('express')
 const session = require('express-session')
-const Message = require('../helpers/messages')
+const Message = require('../service/messages')
 var router = express.Router()
-const productHelpers = require('../helpers/product')
-const userHelpers = require('../helpers/user')
+const productControl = require('../controller/productControl')
+const userControl = require('../controller/userControl')
+const Service =require('../service/payment')
 var message =new Message()
 
 async function Count(id) {
-  var count= await userHelpers.getCartCount(id)
+  var count= await userControl.getCartCount(id)
   return count;
 }
 
@@ -36,7 +37,7 @@ router.get('/', async function(req, res, next){
   }else{
     cartCount = null;
   }
-  productHelpers.getAllProducts().then((products)=>{
+  productControl.getAllProducts().then((products)=>{
     res.render('users/index',{products,userId,cartCount,notif})//sending user and products to view engine
   })
 })
@@ -48,7 +49,7 @@ router.get('/view-item/:id',async (req,res)=>{
     var cartCount = await Count(userId)
     var notif = await message.GetNotif(userId)
   }
-  productHelpers.viewItem(req.params.id).then((product)=>{
+  productControl.viewItem(req.params.id).then((product)=>{
     res.render('users/view-item',{product,userId,cartCount,notif})
   })
 })
@@ -57,7 +58,7 @@ router.get('/search/:data',async(req,res)=>{
   if(req.session.user){
     var userId=req.session.user._id;
   }
-  productHelpers.searchItem(req.params.data).then((products)=>{
+  productControl.searchItem(req.params.data).then((products)=>{
     //console.log(Items)
     res.render('users/index',{products,userId,cartCount})
   })
@@ -74,7 +75,7 @@ router.get('/login',(req,res)=>{
 })
 //login//
 router.post('/login',(req,res)=>{
-  userHelpers.doLogin(req.body).then((response)=>{ //user data send to db and return data if the operations true
+  userControl.doLogin(req.body).then((response)=>{ //user data send to db and return data if the operations true
     if (response.status){
       req.session.loggedIn=true;//create session status
       req.session.user=response.user; //create session and assign response(userdata)//
@@ -107,7 +108,7 @@ router.get('/signup',(req,res)=>{
 })
 
 router.post('/signup',(req,res)=>{
-  userHelpers.doSignup(req.body).then((response)=>{ // recieving userdata then send to database and return data
+  userControl.doSignup(req.body).then((response)=>{ // recieving userdata then send to database and return data
     if(response){
       if(response.ExistUser){
         let userExist="User already exit please login";
@@ -127,7 +128,7 @@ router.post('/signup',(req,res)=>{
 //profile//
 router.get('/profile' ,verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
-  var user=await userHelpers.pickAddress(userId)
+  var user=await userControl.pickAddress(userId)
   //req.session.user=user;
   //console.log(user)
   var cartCount = await Count(userId)
@@ -137,7 +138,7 @@ router.get('/profile' ,verifyLogin,async(req,res)=>{
 
 router.post('/edit-profile',verifyLogin,(req,res)=>{
   let profiledata=req.body;
-  userHelpers.editUser(profiledata).then((response)=>{
+  userControl.editUser(profiledata).then((response)=>{
     console.log(response)
     res.redirect('/profile')
   }).catch((err)=>{
@@ -149,7 +150,7 @@ router.post('/edit-profile',verifyLogin,(req,res)=>{
 router.post('/add-address',verifyLogin,(req,res)=>{
   var userId=req.session.user._id;
   let address=req.body;
-  userHelpers.addAddress(userId,address).then((response)=>{
+  userControl.addAddress(userId,address).then((response)=>{
     console.log(response)
     res.redirect('/profile')
   })
@@ -159,9 +160,9 @@ router.get('/cart',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let user=req.session.user;
   var cartCount = await Count(userId)
-  userHelpers.findCart(userId).then(async(response)=>{
-      let products = await userHelpers.getCartProducts(userId)
-      let total = await userHelpers.getTotalAmount(userId)
+  userControl.findCart(userId).then(async(response)=>{
+      let products = await userControl.getCartProducts(userId)
+      let total = await userControl.getTotalAmount(userId)
       res.render('users/cart',{products,user,userId,total,cartCount})
 
   }).catch((response)=>{
@@ -174,7 +175,7 @@ router.get('/add-to-cart/:id',(req,res)=>{
   var userId=req.session.user._id;
   console.log('ajax request recieved')
   if(req.session.user){
-    userHelpers.addTocart(req.params.id,userId).then((response)=>{
+    userControl.addTocart(req.params.id,userId).then((response)=>{
       if(response){
         console.log('product added to cart')
         res.json({status:true})//response to ajax//
@@ -193,12 +194,12 @@ router.post('/change-product-qty',(req,res,next)=>{
   console.log('request received')
   var userId=req.session.user._id;
   //console.log(req.body)
-  userHelpers.changeProductQty(req.body).then(async(response)=>{
+  userControl.changeProductQty(req.body).then(async(response)=>{
     if(response.RemoveItem){
       console.log('item removed')
       res.json({remove:true})
     }else{
-      response.total= await userHelpers.getTotalAmount(userId)
+      response.total= await userControl.getTotalAmount(userId)
       res.json(response)
     }
     //console.log(response)
@@ -210,20 +211,20 @@ router.post('/change-product-qty',(req,res,next)=>{
 router.post('/place-order',async(req,res)=>{
   let user=req.session.user;
   let userId=req.session.user._id;
-  let products=await userHelpers.getCartlist(userId)
-  let totalPrice= await userHelpers.getTotalAmount(userId)
+  let products=await userControl.getCartlist(userId)
+  let totalPrice= await userControl.getTotalAmount(userId)
   //console.log(products,totalPrice)
   let order=req.body;
   order.address=user.Address;
   order.userId=userId;
   //console.log(order)
-  userHelpers.placeOrder(order,products,totalPrice).then((orderId)=>{
+  userControl.placeOrder(order,products,totalPrice).then((orderId)=>{
     console.log('order-created')
     if(req.body['payment-method']==='COD'){
       console.log('cash on delivery')
       res.json({CODsuccess:true})
     }else{
-      userHelpers.generateRazorPay(orderId,totalPrice).then((response)=>{
+      Service.generateRazorPay(orderId,totalPrice).then((response)=>{
         res.json(response)
         console.log(response)
       }).catch((err)=>{
@@ -235,7 +236,7 @@ router.post('/place-order',async(req,res)=>{
 })
 router.post('/cancel-transaction',(req,res)=>{
   var userId=req.session.user._id
-  userHelpers.cancelTransaction(req.body,userId).then((response)=>{
+  userControl.cancelTransaction(req.body,userId).then((response)=>{
     res.json(response)
   })
 })
@@ -246,7 +247,7 @@ router.post('/verify-payment',(req,res)=>{
   //passing this details to verifypayment //
   let userId =req.session.user._id;
   console.log(req.body)
-  userHelpers.verifyPayment(req.body,userId).then(()=>{
+  Service.verifyPayment(req.body,userId).then(()=>{
     res.json({status:true})
     console.log('payment successfull')
   }).catch((err)=>{
@@ -262,7 +263,7 @@ router.post('/verify-payment',(req,res)=>{
 
 router.get('/view-orders',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
-  let orders=await userHelpers.getOrders(userId)
+  let orders=await userControl.getOrders(userId)
   var cartCount = await Count(userId)
   res.render('users/orders',{userId,orders,cartCount})
 })
@@ -274,7 +275,7 @@ router.get('/view-orders',verifyLogin,async(req,res)=>{
 // })
 router.post('/cancel-order',(req,res)=>{
   console.log(req.body)
-  userHelpers.cancelRequest(req.body).then((response)=>{
+  userControl.cancelRequest(req.body).then((response)=>{
     res.json({status:true})
   }).catch((err)=>{
     console.log(err)
@@ -284,7 +285,7 @@ router.post('/cancel-order',(req,res)=>{
 
 router.get('/inbox',verifyLogin,async(req,res)=>{
   let userId=req.session.user._id;
-  let inbox= await userHelpers.getInbox(userId)
+  let inbox= await message.GetInbox(userId)
   var cartCount = await Count(userId)
   res.render('users/inbox-user',{userId,cartCount,inbox})
 })

@@ -105,13 +105,27 @@ class Message{
              }
          })
      }
+
      ReadInbox(userid){
          db.get().collection(collection.USERINBOX).updateMany({user:objectId(userid)},{$set:{read:true}})
      }
+
      async GetNotif(userid){
          let unread = await db.get().collection(collection.USERINBOX).find({user:objectId(userid),read:{$exists:false}}).toArray()
          return unread.length;
      }
+     
+     async GetInbox(userid){
+        
+        let inbox = await db.get().collection(collection.USERINBOX).find({user:objectId(userid)}).sort({time: -1}).toArray()
+        console.log(inbox)
+        return inbox;
+    }
+    async getAdminInbox(){
+       let inbox = await db.get().collection(collection.INBOX).find().sort({time: -1}).toArray()
+        console.log(inbox)
+        return inbox;
+    }
 }
 
 module.exports= Message;

@@ -1,21 +1,15 @@
 /* This program was written by zuhail pm*/
 /* for more details :github/zuhl-c*/
 
-var db=require('../config/connection')
-var collection=require('../config/collections')
+const db=require('../config/connection')
+const collection=require('../config/collections')
 const bcrypt=require('bcrypt')
 const { reject } = require('bcrypt/promises')
-var objectId=require('mongodb').ObjectID;
-const Razorpay =require('razorpay')
+const objectId=require('mongodb').ObjectID;
 const date = require('date-and-time');
-const Message = require('./messages');
-const { response } = require('express');
+const Message = require('../service/messages');
 var message = new Message()
 
-var instance = new Razorpay({
-    key_id: 'rzp_test_uWu157JMmfMDhI',
-    key_secret: 'u4SJ2vhKNTU6cbNS6JEra6Pi',
-  });
 
 module.exports={
     doSignup:(userData)=>{
@@ -230,7 +224,13 @@ module.exports={
                     $project:{
                         item:1,
                         quantity:1,
-                        product:{$arrayElemAt:['$product',0]}
+                        product:{$arrayElemAt:['$product',0]},
+                    }
+                },
+                {
+                    $project:{
+                        'product.description':0,
+                        'product._id':0
                     }
                 }
             ]).toArray()
@@ -401,6 +401,13 @@ module.exports={
 
             },
             {
+                $project:{
+                    _id:0,
+                    item:0,
+                    'product.description':0
+                }
+            },
+            {
                 $unwind: '$product'
             },
             {
@@ -419,93 +426,6 @@ module.exports={
             console.log(orders)
         })
     },
-    // getOrderedProducts(orderId){
-    //     return new Promise(async(resolve,reject)=>{
-    //         let orderedProducts=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-    //             {
-    //                 $match:{_id:objectId(orderId)}
-    //             },
-    //             {
-    //                 $unwind:'$products'
-    //             },
-    //             {
-    //                 $project:{
-    //                     item:'$products.item',
-    //                     quantity:'$products.quantity'
-    //                 }
-    //             },
-    //             {
-    //                 $lookup:{
-    //                     from:collection.PRODUCT_COLLECTION,
-    //                     localField:'item',
-    //                     foreignField:'_id',
-    //                     as:'product'
-    //                 }
-    //             },
-    //             {
-    //                 $project:{
-    //                     item:1,
-    //                     quantity:1,
-    //                     product:{$arrayElemAt:['$product',0]}
-    //                 }
-    //             }
-    //         ]).toArray()
-    //         console.log(orderedProducts)
-    //         resolve(orderedProducts)
-    //     })
-
-    // },
-    generateRazorPay:(orderId,totalAmt)=>{
-        return new Promise((resolve,reject)=>{
-            var options = {  
-            amount: totalAmt*100,  // amount in the smallest currency unit  
-            currency: "INR",  
-            receipt:''+orderId,
-        }
-            instance.orders.create(options, function(err, order){
-                if(err){
-                    console.log(err)
-                    console.log('razrorpay order generation failed')
-                    db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(orderId)}).then(()=>{
-                        console.log('order removed')
-                    })
-                    reject(err)
-                }else{
-                    resolve(order)
-                }
-            })
-        })
-    },
-    verifyPayment:(details,userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            var receipt = details['order[receipt]']
-            const crypto = require('crypto')
-            //creating hmac hash key using razorpay secret key //
-            let hmac = crypto.createHmac('sha256','u4SJ2vhKNTU6cbNS6JEra6Pi')
-            console.log(hmac)
-            //push this order-data to hmac //
-            hmac.update(details['payment[razorpay_order_id]']+'|'+details['payment[razorpay_payment_id]'])
-            // creating signature //
-            hmac=hmac.digest('hex')
-            // checking recieved signature parameter equal to created hmac signature //
-            if(hmac==details['payment[razorpay_signature]']){
-                console.log('created signature: '+hmac)
-                console.log('received signature: '+details['payment[razorpay_signature]'])
-                console.log('payment verified')
-
-                await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:objectId(receipt)},{$set:{'status':'placed',date:date.format(new Date(), 'DD-MM-YYYY hh:mm A')}})
-                await db.get().collection(collection.CART_COLLECTION).removeOne({user:objectId(userId)})
-                console.log('cart itmes removed ')
-                resolve()
-
-            }else{
-                console.log('payment verification failed')
-                db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(receipt)}).then(()=>{
-                })
-                reject('transaction cancelled')
-            }
-        })
-    },
     async cancelRequest(data){
         let check =await db.get().collection(collection.INBOX).findOne({order:objectId(data.id)})
         if(check){
@@ -514,16 +434,8 @@ module.exports={
             message.MakeCancelRequest(data.id,data.reason)
         }
     },
-    getInbox(id){
-        return new Promise((resolve)=>{
-            db.get().collection(collection.USERINBOX).find({user:objectId(id)}).sort({time: -1}).toArray().then((inbox)=>{
-                console.log(inbox)
-                resolve(inbox)
-            })
-        })
-    },
     cancelTransaction(data){
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve)=>{
             db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(data.receipt)}).then(()=>{
                 resolve('transaction canceled')
             })
