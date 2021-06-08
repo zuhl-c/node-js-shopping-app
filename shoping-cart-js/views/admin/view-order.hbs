@@ -11,6 +11,7 @@
                                     <h6 class="pt-2"> Order placed On : <span>{{details.date}}</span></h6>
                                     <h6 class="fw-bold">Items : {{details.products.length}}</h6>
                                     <h6 class=" fw-bold">Total Amount : &#8377;<span>{{details.totalAmount}}</span></h6>
+
                                     <div class="row">
                                     <div class="col-md-6">
                                         <div class="card card-body ">
@@ -48,8 +49,8 @@
                                     {{#if details.deliverd}}
                                     <h6> cancelled On: <span>{{details.delivered}}</span></h6>
                                     {{/if}}
-                                    <h6 class="fw-bolder"> Payment Method: <span
-                                            class="text-success">{{details.paymentMethod}}</span></h6>
+                                    <h6 class="fw-bolder"> Payment Method: <span>{{details.paymentMethod}}</span></h6>
+                                    <h6 class="fw-bolder"> Payment <span class="text-success">{{details.payment}}</span></h6>
                                     <hr>
                                     <b> Update Tracking Status</b><br>
                                     <div class="card mt-2">

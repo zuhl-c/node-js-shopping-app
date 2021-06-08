@@ -35,7 +35,7 @@ class Message{
        }
        db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
            if(data){
-               console.log('order cancelled message inserted')
+               console.log('order cancelled message sended')
            }else{
                console.log(err)
            }
@@ -51,9 +51,25 @@ class Message{
        }
        db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
            if(data){
-               console.log('order placed message inserted')
+               console.log('order placed message sended')
            }else{
                console.log(err)
+           }
+       })
+   }
+   makePAYmessage(data){
+       let message={
+           type:'payment success',
+           order:objectId(data.order),
+           user:objectId(data.user),
+           content:'Hi ' + data.name + ' your payment was successfull ',
+           payment_id:data.payid,
+           amount:data.amount,
+           time:date.format(new Date(), 'DD-MM-YYYY hh:mm A')
+       }
+       db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
+           if(data){
+               console.log('payment message sended')
            }
        })
    }
@@ -67,7 +83,7 @@ class Message{
        }
        db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
         if(data){
-            console.log('order shipped message inserted')
+            console.log('order shipped message sended')
         }else{
             console.log(err)
         }
@@ -83,7 +99,7 @@ class Message{
         }
         db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
             if(data){
-                console.log('out of delivery message inserted')
+                console.log('out of delivery message sended')
             }else{
                 console.log(err)
             }
@@ -99,7 +115,7 @@ class Message{
          }
          db.get().collection(collection.USERINBOX).insertOne(message,function(err,data){
              if(data){
-                 console.log('delivered message inserted')
+                 console.log('delivered message sended')
              }else{
                  console.log(err)
              }

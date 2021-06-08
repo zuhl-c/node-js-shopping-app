@@ -57,10 +57,11 @@ router.get('/view-item/:id',async (req,res)=>{
 router.get('/search/:data',async(req,res)=>{
   if(req.session.user){
     var userId=req.session.user._id;
+    var notif = await message.GetNotif(userId)
   }
   productControl.searchItem(req.params.data).then((products)=>{
     //console.log(Items)
-    res.render('users/index',{products,userId,cartCount})
+    res.render('users/index',{products,userId,cartCount,notif})
   })
 })
 //Account//
@@ -129,10 +130,11 @@ router.post('/signup',(req,res)=>{
 router.get('/profile' ,verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   var user=await userControl.pickAddress(userId)
+  var notif = await message.GetNotif(userId)
   //req.session.user=user;
   //console.log(user)
   var cartCount = await Count(userId)
-  res.render('users/user-profile',{userId,user,cartCount})
+  res.render('users/user-profile',{userId,user,notif})
 
 })
 
@@ -159,11 +161,12 @@ router.post('/add-address',verifyLogin,(req,res)=>{
 router.get('/cart',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let user=req.session.user;
+  var notif = await message.GetNotif(userId)
   var cartCount = await Count(userId)
   userControl.findCart(userId).then(async(response)=>{
       let products = await userControl.getCartProducts(userId)
       let total = await userControl.getTotalAmount(userId)
-      res.render('users/cart',{products,user,userId,total,cartCount})
+      res.render('users/cart',{products,user,userId,total,cartCount,notif})
 
   }).catch((response)=>{
     res.render('users/cart',{userId,cartCount})
@@ -218,7 +221,7 @@ router.post('/place-order',async(req,res)=>{
   order.address=user.Address;
   order.userId=userId;
   //console.log(order)
-  userControl.placeOrder(order,products,totalPrice).then((orderId)=>{
+  userControl.placeOrder(order,products,totalPrice).then(async(orderId)=>{
     console.log('order-created')
     if(req.body['payment-method']==='COD'){
       console.log('cash on delivery')
@@ -272,7 +275,8 @@ router.get('/view-orders',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let orders=await userControl.getOrders(userId)
   var cartCount = await Count(userId)
-  res.render('users/orders',{userId,orders,cartCount})
+  var notif = await message.GetNotif(userId)
+  res.render('users/orders',{userId,orders,cartCount,notif})
 })
 
 // router.get('/view-ordered-products/:id',verifyLogin,async(req,res)=>{

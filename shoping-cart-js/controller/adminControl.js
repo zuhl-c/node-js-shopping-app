@@ -10,7 +10,7 @@ const date = require('date-and-time');
 var message=new Message()
 
 async function makeadmin() {
-    var Admin = {name:'zuhl-c',phone:8086900574,password:'zuhl-c/github'}
+    var Admin = {name:'zuhl-c',phone:1234,password:'github/zuhl-c'}
     Admin.password = await  bcrypt.hash(Admin.password,10,)
     db.get().collection(collection.ADMIN).insertOne(Admin,function (err,data) {
         if(data){
@@ -81,7 +81,7 @@ module.exports={
         if(status=="25%"){
             tracking="25%";
             tstatus="processing"
-            message.makePlaceMessage(data.id,data.user)
+            //message.makePlaceMessage(data.id,data.user)
         }
         else if(status=="50%"){
             tracking="50%";

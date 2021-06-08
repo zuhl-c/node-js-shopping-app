@@ -11,7 +11,11 @@
                             <h6 class="fw-bold text-uppercase">{{this.type}}</h6>
                              <h6 style="font-size: 14px;">Time : {{this.time}}</h6>
                              <h6 style="font-size: 14px;">Order Id : <span class="">{{this.order}}</span></h6>
-                            <p class="fw-bolder">{{this.content}}</p>
+                             <h6 class="fw-bolder">{{this.content}}</h6>
+                             {{#if this.amount}}
+                             <h6 style="font-size: 14px;"> Payment id : {{this.payment_id}}</h6>
+                             <h6 style="font-size: 14px;"> Amount : &#8377;{{this.amount}}</h6>
+                             {{/if}}
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,9 @@
                                     <div class="col-md-4">
                                         <h6>Total: &#8377; <span class="fw-bold">{{this.totalAmount}}</span></h6>
                                         <h6>Payment Method: <span class="fw-bold">{{this.paymentMethod}}</span></h6>
+                                        {{#if this.payment}}
+                                        <h6>Payment : <span class="text-success fw-bold">{{this.payment}}</span></h6>
+                                        {{/if}}
                                         {{!-- <h6>Payment <span class="text-success">success</span></h6> --}}
                                     </div>
                                 </div>

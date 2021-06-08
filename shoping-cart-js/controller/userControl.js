@@ -359,6 +359,7 @@ module.exports={
                 db.get().collection(collection.ORDER_COLLECTION).insertOne(ORDER).then((response)=>{
                     db.get().collection(collection.CART_COLLECTION).removeOne({ user: objectId(order.userId)}).then(() => {
                         console.log('cart items removed')
+                        message.makePlaceMessage(response.ops[0]._id,order.userId)
                     })
                     resolve(response.ops[0]._id)
                 })
