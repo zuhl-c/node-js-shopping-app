@@ -1,0 +1,154 @@
+<section>
+    {{#if orders}}
+    <div class="container">
+            <div class="row mb-5">
+                {{#each orders}}
+                <div class="col-md-6">
+                    <div class="container my-4 d-flex justify-content-center">
+                        <div class="card cart-card ">
+                            <div class="card-body">
+                                <div class="row justify-content-between">
+                                    <div class="col-md-8">
+                                        <h6>Order : <span class="fw-bold">{{this.status}}</span></h6>
+                                        <h6 style="font-size: 15px;">Order Id : <span class="fw-bold">{{this._id}}</span></h6>
+                                        <h6 style="font-size: 15px;">Placed On: {{this.date}}</h6>
+                                         {{#if this.cancelled}}
+                                        <h6 style="font-size: 15px;">Cancelled On : <span>{{this.cancelled}}</span></h6>
+                                        {{/if}}
+                                        {{#if this.delivered}}
+                                        <h6 style="font-size: 15px;">Delivered On:<span class="pc">{{this.delivered}}</span></h6>
+                                        {{/if}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Total: &#8377; <span class="fw-bold">{{this.totalAmount}}</span></h6>
+                                        <h6>Payment Method: <span class="fw-bold">{{this.paymentMethod}}</span></h6>
+                                        {{#if this.payment}}
+                                        <h6>Payment : <span class="text-success fw-bold">{{this.payment}}</span></h6>
+                                        {{/if}}
+                                        {{!-- <h6>Payment <span class="text-success">success</span></h6> --}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6 style="font-size: 15px;">Track Order : <span class="text-success">{{this.tstatus}}</span></h6>
+                                        <div class="progress mt-2" style="height: 10px;">
+                                            <div class="progress-bar" id="status-bar" role="progressbar" style=" width: {{this.tracking}}; background:#20c997 ;"
+                                                aria-valuemin="0" aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="pt-2">Items <span> {{this.products.length}}</span></h6>
+                                <div class="row">
+                                    {{#each products}}
+                                    <div class="col-md-6">
+                                        <div class="cart-card text-center p-1">
+                                            <div class="col align-self-center ">
+                                                <img style="width: 120px;" src="/images/{{this.product._id}}.png"/>
+                                            </div>
+                                            <div>
+                                                <h6>{{this.product.name}}</h6>
+                                            </div>
+                                            <div class="">
+                                                <h6>quantity : {{this.quantity}}</h6>
+                                            </div>
+                                            <h6>&#8377;{{this.product.price}}</h6>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="mt-2 text-center fw-bold">Delivery Address</h6>
+                                        <div class="card p-2">
+                                                <h6 class="text-muted" style="font-size: 14px;">name:
+                                                    {{this.deliveryAddress.fullname}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">phone:
+                                                    {{this.deliveryAddress.phone}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">pincode:
+                                                    {{this.deliveryAddress.pincode}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">state:
+                                                    {{this.deliveryAddress.state}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">city:
+                                                    {{this.deliveryAddress.city}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">area:
+                                                    {{this.deliveryAddress.area}}</h6>
+                                                <h6 class="text-muted" style="font-size: 14px;">landmark:
+                                                    {{this.deliveryAddress.landmark}}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" >
+                                        <h6 class="mt-2 text-center fw-bold">Order Help</h6>
+                                        <hr class="w-50 m-auto">
+                                        <div class="text-center pt-2">
+                                            <button href="" class="btn btn-danger" onclick="cancelRequest('{{this._id}}')"  style="font-size: 15px;">cancel order</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+    {{else}}
+    <div class="d-flex align-items-center justify-content-center" style="height: 350px">
+        <h4 class=" p-2 fw-bold">No Orders</h4>
+        <a href="/" class="">&leftarrow;</a>
+    </div>
+    {{/if}}
+<div class="modal fade" id="cancel-req" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content m-auto card cart-card">
+            <div class="card-body p-2">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="text-center p-2">
+                    <h6 class="fw-bold">Do you want to cancel this order ? </h6>
+                    <div class="p-2">
+                        <button type="button" style="font-size: 12px;" class="btn btn-danger fw-bold"
+                            data-bs-dismiss="modal" onclick="confirm_cancel(0)">NO</button>
+                        <button type="button" style="font-size: 12px;" class="btn btn-dark fw-bold"
+                            onclick="confirm_cancel(1)">Yes</button>
+                        <div id="reason">
+                            <form id="cancelReq">
+                                <input name="id" id="getId" hidden>
+                                <input name="reason" type="text" class="form-input h-25" placeholder="reason" required>
+                                <button class="btn btn-dark mt-2" type="submit">Confirm</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="req_sended" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content m-auto card cart-card">
+            <div class="card-body p-2">
+                <div class="text-center p-2">
+                    <h6 class="fw-bold text-success">Request Sended <i class="fas fa-check"></i></h6>
+                    <button class="btn btn-dark" data-bs-dismiss="modal" aria-label="close">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<script>
+    function cancelRequest(id){
+        $('#cancel-req').modal('toggle')
+        $('#getId').val(id)
+    }
+   window.onload = function(){
+            document.getElementById("reason").style.display = "none";
+        }
+        function confirm_cancel(e){
+            if(e){
+                document.getElementById("reason").style.display = "block";
+                console.log('clicked')
+            }else{
+                 document.getElementById("reason").style.display = "none";
+            }
+        }
+</script>

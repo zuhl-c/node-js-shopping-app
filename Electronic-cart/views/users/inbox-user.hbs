@@ -1,0 +1,49 @@
+<section>
+    <div class="container mb-5">
+        {{#if inbox}}
+        {{#each inbox}}
+        <div class="row">
+            <div class="col-md-8 m-auto">
+                <div class="mt-2">
+                    <div class="cart-card">
+                        <div class="card-body text-center">
+                            <h6 id="inUser" hidden>{{this.user}}</h6>
+                            <h6 class="fw-bold text-uppercase">{{this.type}}</h6>
+                             <h6 style="font-size: 14px;">Time : {{this.time}}</h6>
+                             <h6 style="font-size: 14px;">Order Id : <span class="">{{this.order}}</span></h6>
+                             <h6 class="fw-bolder">{{this.content}}</h6>
+                             {{#if this.amount}}
+                             <h6 style="font-size: 15px;"> Payment id : {{this.payment_id}}</h6>
+                             <h6 style="font-size: 15px;"> Amount : &#8377; {{this.amount}}</h6>
+                             {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+      <div class="d-flex align-items-center justify-content-center" style="height: 350px">
+            <h4 class=" p-2 fw-bold">No Messages</h4>
+            <a href="/" class="">&leftarrow;</a>
+      </div>
+        {{/if}}
+    </div>
+</section>
+<script>
+    window.onload=function(){
+        if('{{inbox}}'){
+            var user= $('#inUser').html();
+       console.log(user)
+       $.ajax({
+           url:'/read-message/'+user,
+           method:'put',
+           success:function(response){
+               console.log(response)
+           }
+       })
+        }else{
+            console.log('no messages')
+        }
+    }
+</script>
