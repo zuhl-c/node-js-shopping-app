@@ -1,13 +1,4 @@
-
-/* BASIC */
-a {
-  color: #92badd;
-  display:inline-block;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-/* STRUCTURE */
+/* styles basic */
 
 .wrapper {
   display: flex;
@@ -212,7 +203,9 @@ a {
 }
 
 a {
-  color: black
+  color: black;
+  display:inline-block;
+  text-decoration: none;
 }
 
 a:hover {
@@ -225,16 +218,10 @@ a:hover {
 }
 /* Table Styles */
 
-.table-wrapper{
-  margin: 10px 70px 70px;
-  box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
-}
-
 .fl-table {
   border-radius: 5px;
   font-size: 12px;
   font-weight: normal;
-  border: none;
   border-collapse: collapse;
   width: 100%;
   max-width: 100%;
@@ -326,3 +313,16 @@ a:hover {
   font-size: 15px;
   font-weight: bold;
 }
+.infos{
+  height: 100px;
+  width: 200px;
+  margin: auto;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.headings{
+  text-align: center;
+  font-weight: bold;
+  padding-top: 1rem;
+}
+

@@ -1,0 +1,70 @@
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="row">
+                    <div class="col-md-3 p-2">
+                        <div class=" infos">
+                            <h5 class="headings">Orders</h5>
+                            <h5 class="text-center text-danger fw-bold"><span>{{orders.length}}</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 p-2">
+                        <div class=" infos">
+                            <h5 class="headings">Payments</h5>
+                            <h5 class="text-center text-danger fw-bold"><span> &#8377;{{total}}</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 p-2">
+                        <div class=" infos">
+                            <h5 class="headings">Products</h5>
+                            <h5 class="text-center text-danger fw-bold"><span>{{P_count}}</span></h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 p-2">
+                        <div class=" infos">
+                            <h5 class="headings">Users</h5>
+                            <h5 class="text-center text-danger fw-bold"><span>{{U_count}}</span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="text-center mt-2 fw-bold">Orders</h5>
+                <hr class="m-auto w-25">
+                <div class="card mt-2">
+                    <table class="fl-table" style="font-size: 15px;">
+                        <thead>
+                            <tr>
+                                <th class="bg-dark text-white">Date</th>
+                                <th class="bg-dark text-white">Order Id</th>
+                                <th class="bg-dark text-white">Items</th>
+                                <th class="bg-dark text-white">Amount</th>
+                                <th class="bg-dark text-white">Status</th>
+                                <th class="bg-dark text-white">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each orders}}
+                            <tr>
+                                <td>{{this.date}}</td>
+                                <td>{{this._id}}</td>
+                                <td>{{this.products.length}}</td>
+                                <td class="fw-bold">&#8377;{{this.totalAmount}}</td>
+                                <td>{{this.status}}</td>
+                                <td><a class="btn btn-outline-dark fw-bold" href="/admin/view-order?id={{this._id}}"
+                                        style="font-size: small;">view</a></td>
+                            </tr>
+                            {{/each}}
+                        <tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+
+</style>

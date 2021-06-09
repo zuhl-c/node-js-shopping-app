@@ -1,7 +1,8 @@
-<section class="py-5">
-  <div class="wrapper fadeInDown mt-2">
+<section>
+  <div class="container">
+    <div class="wrapper  mt-5">
   <div class="formContent">
-    <div class="fadeIn first p-2">
+    <div class="p-2">
       <i class="fas fa-user"> Login</i>
     </div>
     <form action="/login" method="POST">
@@ -12,13 +13,11 @@
     {{/if}}
       <input class="form-input" name="email" placeholder="Email" required>
       <input class="form-input" name="password" placeholder="Password" required>
-      <input type="submit" class=" mt-4 w-50 btn btn-dark text-white m-auto" value="Log In">
+      <button type="submit" class="btn btn-dark w-50 mt-2">Log in </button>
     </form>
-    <div class="p-2">
-      <a class="underlineHover" href="#" style="font-size: 15px;">Forgot Password?</a> <br>
-      <h6 class="p-2" style="font-size: 15px;">New User ?</h6>
-      <a href="/signup" class="mb-4 w-50 btn btn-dark text-white m-auto">Sign Up</a>
-    </div>
+      {{!-- <a class="underlineHover p-2" href="#" style="font-size: 15px;">Forgot Password?</a> <br> --}}
+      <a href="/signup" class="p-2">sign up ?</a>
   </div>
 </div>
+  </div>
 </section>

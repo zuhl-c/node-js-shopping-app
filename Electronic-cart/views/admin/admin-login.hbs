@@ -1,15 +1,36 @@
-<section class="py-5 mb-5">
-  <div class="wrapper fadeInDown mt-5">
+<section>
+  <div class="container">
+    <div class="wrapper mt-5">
   <div class="formContent">
-    <div class="fadeIn first p-2">
-      <i class="fas fa-user"> Login</i>
+    <div class="p-2">
+      <i class="fas fa-user"> Admin Login</i>
     </div>
     <form action="/admin/admin-login" method="POST">
     <p class="error text-danger">{{err}}</p>
-       <input type="tel" id="" class="form-input" name="phone" placeholder="Phone Number" >
-      <input class="form-input" name="password" placeholder="Password" >
-      <input type="submit" class=" mt-5 mb-5 w-50 btn btn-dark text-white m-auto" value="Log In">
+       <input type="tel" id="" class="form-input" name="phone" placeholder="Phone Number" required>
+      <input class="form-input" name="password" placeholder="Password" required>
+        <button type="submit" class="mt-2 w-50 btn btn-dark"> Log in</button>
     </form>
+    <button data-bs-target="#admin_sign" data-bs-toggle="modal" class=" m-4 btn btn-dark w-50">sign up ?</button>
   </div>
 </div>
+  </div>
+      <div class="modal fade" id="admin_sign" aria-hidden="true" tabinde="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content m-auto wrapper">
+                <div class="card-body text-center">
+                        <h6 class="p-2"><i class="fas fa-user"> Sign up</i></h6>
+                        <form id="signup_admin">
+                          <input type="text" id="" class="form-input" name="name" placeholder="Name" required>
+                          <input type="tel" id="" class="form-input" name="phone" placeholder="Phone Number" required>
+                          <input type="password" id="" class="form-input" name="password" placeholder="Password" required>
+                          <button type="submit" class="btn btn-dark mt-2 w-50">Sign In</button>
+                        </form>
+                    </div>
+            </div>
+        </div>
+    </div>
 </section>
+<script>
+
+</script>

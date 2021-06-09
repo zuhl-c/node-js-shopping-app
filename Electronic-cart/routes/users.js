@@ -1,7 +1,6 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
-//importing modules//
 const { response } = require('express')
 var express = require('express')
 const session = require('express-session')
@@ -81,6 +80,7 @@ router.post('/login',(req,res)=>{
     if (response.status){
       req.session.loggedIn=true;//create session status
       req.session.user=response.user; //create session and assign response(userdata)//
+      console.log(req.session.user)
       res.redirect('/')//going to home page after login
     }else{
       if(response.userErr){
@@ -159,6 +159,7 @@ router.post('/add-address',verifyLogin,(req,res)=>{
   })
 })
 //cart//
+//modification required//
 router.get('/cart',verifyLogin,async(req,res)=>{
   var userId=req.session.user._id;
   let user=req.session.user;
@@ -174,7 +175,7 @@ router.get('/cart',verifyLogin,async(req,res)=>{
   })
 })
 
-router.get('/add-to-cart/:id',(req,res)=>{
+router.put('/add-to-cart/:id',(req,res)=>{
   //sending productid and session-userid //
   var userId=req.session.user._id;
   console.log('ajax request recieved')
@@ -305,6 +306,7 @@ router.get('/inbox',verifyLogin,async(req,res)=>{
 router.put('/read-message/:id',verifyLogin,(req,res)=>{
   console.log(req.params.id)
   message.ReadInbox(req.params.id)
+  res.json({status:true})
 })
 
 module.exports = router;

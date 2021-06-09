@@ -34,14 +34,7 @@
     window.onload=function(){
         if('{{inbox}}'){
             var user= $('#inUser').html();
-       console.log(user)
-       $.ajax({
-           url:'/read-message/'+user,
-           method:'put',
-           success:function(response){
-               console.log(response)
-           }
-       })
+            readInbox(user)
         }else{
             console.log('no messages')
         }

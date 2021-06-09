@@ -1,5 +1,5 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
 var collection=require('../config/collections')
 var db=require('../config/connection')
@@ -24,6 +24,27 @@ async function makeadmin() {
 }
 
 module.exports={
+    adminSignup(data){
+        return new Promise(async(resolve,reject)=>{
+            data.phone=parseInt(data.phone)
+            data.password=await bcrypt.hash(data.password,10)
+            //console.log(data)
+            db.get().collection(collection.ADMIN).insertOne(data,function(err,data){
+                if(data.ops[0]){
+                    //console.log(data.ops[0])
+                    let session={};
+                    session._id=data.ops[0]._id;
+                    session.admin=data.ops[0].name;
+                    session.phone=data.ops[0].phone;
+                    session.pswrd=true;
+                    resolve(session)
+                }else{
+                    reject(err)
+                }
+            })
+        })
+    },
+
     adminLogin(logindata){
         logindata.phone=parseInt(logindata.phone)
         var status;
@@ -36,11 +57,14 @@ module.exports={
                             db.get().collection(collection.ADMIN).findOne({_id:objectId(data._id)},{projection:{password:0}},
                             function(err,data){
                                 if(data){
-                                    //console.log(data)
-                                    let admin={};
-                                    admin.data=data
-                                    admin.pswrd=true;
-                                    resolve(admin)
+                                    let session={};
+                                    session._id=data._id;
+                                    session.admin=data.name;
+                                    session.phone=data.phone;
+                                    session.pswrd=true;
+                                    //console.log(session)
+                                    resolve(session)
+
                                 }else{
                                     console.log(err)
                                 }
@@ -144,7 +168,35 @@ module.exports={
     async getUser(id){
         let user =db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(id)},{projection:{password:0,_id:0,Address:0}})
         return user;
+    },
+    async getTotalPayment(){
+        var payment = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            // {
+            //     $project:{totalAmount:1}
+            // },
+            {
+                $group: { _id : null, total : { $sum: "$totalAmount" } }
+            },
+            {
+                $unwind:'$total'
+            },
+            {
+                $project:{_id:0,total:1}
+            }
+        ]).toArray()
+        //console.log(payment[0].total)
+        return payment[0].total;
+    },
+    async getProductCount(){
+        var Count = await db.get().collection(collection.PRODUCT_COLLECTION).find().count()
+        //console.log(count)
+        return Count;
+    },
+    async getUserCount(){
+        var Count = await db.get().collection(collection.USER_COLLECTION).find().count()
+        return Count;
     }
+
 }
 
 

@@ -1,5 +1,5 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
 const db=require('../config/connection')
 const collection=require('../config/collections')
@@ -103,7 +103,7 @@ module.exports={
            })
         })
     },
-
+    //modification required//
     doLogin:(userData)=>{
         return new Promise(async(resolve)=>{
             let status={};

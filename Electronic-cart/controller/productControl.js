@@ -1,5 +1,5 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
 var db=require('../config/connection')
 var collection=require('../config/collections')

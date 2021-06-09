@@ -1,5 +1,5 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
 var db=require('../config/connection');
 var collection=require('../config/collections');
@@ -10,8 +10,8 @@ var Razorpay=require('razorpay');
 var message = new Message()
 
 var instance = new Razorpay({
-    key_id: 'rzp_test_uWu157JMmfMDhI',
-    key_secret: 'u4SJ2vhKNTU6cbNS6JEra6Pi',
+    key_id: 'rzp_test_key',//your razorpay public key//
+    key_secret: 'rzp_secret_key',//your razorpay private key//
   });
 
   module.exports={
@@ -19,10 +19,11 @@ var instance = new Razorpay({
     generateRazorPay(orderId,totalAmt){
         return new Promise((resolve,reject)=>{
             var options = {  
-            amount: totalAmt*100,  // amount in the smallest currency unit  
+            amount: totalAmt*100,  // amount in the smallest currency unit //
             currency: "INR",  
             receipt:''+orderId,
         }
+        //craeting razorpay order//
             instance.orders.create(options, function(err, order){
                 if(err){
                     console.log(err)
@@ -37,13 +38,14 @@ var instance = new Razorpay({
             })
         })
     },
+    //verifying payment//
     verifyPayment(details,userId){
         return new Promise(async(resolve,reject)=>{
             var receipt = details['order[receipt]']
             const crypto = require('crypto')
             //creating hmac hash key using razorpay secret key //
-            let hmac = crypto.createHmac('sha256','u4SJ2vhKNTU6cbNS6JEra6Pi')
-            //push this order-data to hmac //
+            //using sha256 cryptography alogrithm //
+            let hmac = crypto.createHmac('sha256','your_secret_key')//put your secret key//
             hmac.update(details['payment[razorpay_order_id]']+'|'+details['payment[razorpay_payment_id]'])
             // creating signature //
             hmac=hmac.digest('hex')
@@ -60,17 +62,19 @@ var instance = new Razorpay({
 
                 message.makePlaceMessage(receipt,userId)
                 saveThePayment(details,userId)
+
                 resolve()
             }else{
                 console.log('payment verification failed')
-                db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(receipt)}).then(()=>{
-                })
+                // db.get().collection(collection.ORDER_COLLECTION).removeOne({_id:objectId(receipt)}).then(()=>{
+                // })
                 reject('transaction cancelled')
             }
         })
     }
   }
 
+  //svaing a copy of the paymant and send the message to user//
   async function saveThePayment(details,userId) {
 
       let paymentID=details['payment[razorpay_payment_id]']

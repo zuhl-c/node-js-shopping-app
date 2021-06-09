@@ -1,6 +1,5 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
-
+/* for more details :www.github.com/zuhl-c*/
 
 const date = require('date-and-time');
 var collection=require('../config/collections')

@@ -1,7 +1,6 @@
 /* This program was written by zuhail pm*/
-/* for more details :github/zuhl-c*/
+/* for more details :www.github.com/zuhl-c*/
 
-//modules importing//
 var express = require('express');
 var router = express.Router();
 const productControl = require('../controller/productControl');
@@ -23,20 +22,37 @@ function verifyAdmin(req,res,next) {
     res.render('admin/admin-login',{admin})
   }
 }
-
 // GET admin listing//
 router.get('/',verifyAdmin,async function(req, res) {
-  let products = await productControl.getAllProducts()
-  console.log(products)
-  res.render('admin/view-products',{admin,header,products})
 
+  var orders = await adminControl.getAllorders()
+  var total = await adminControl.getTotalPayment()
+  var P_count = await adminControl.getProductCount()
+  var U_count = await adminControl.getUserCount()
+
+  res.render('admin/admin-index',{admin,header,orders,total,P_count,U_count})
+
+})
+//admin //signup//
+router.post('/signup',function(req,res){
+//console.log(req.body)
+  adminControl.adminSignup(req.body).then(function(status){
+    req.session.admin=status;
+    req.session.LoggedIn=true;
+    console.log(req.session.admin)
+    console.log('admin signup success')
+    res.json({status:true})
+  }).catch(function(err){
+    console.log(err)
+  })
 })
 //admin login//
 router.post('/admin-login',async function(req,res){
   adminControl.adminLogin(req.body).then(async function (status){
     if(status.pswrd){
-      req.session.admin=status.data;
+      req.session.admin=status;
       req.session.LoggedIn=true;
+      console.log(status)
       console.log('admin login')
       res.redirect('/admin')
     }
@@ -51,7 +67,6 @@ router.get('/logout',function (req,res){
   console.log('admin logout')
   res.redirect('/admin')
 })
-
 //add product//
 router.get('/add-product',verifyAdmin,function(req,res){
   res.render('admin/add-product',{admin,header})
@@ -60,10 +75,9 @@ router.get('/add-product',verifyAdmin,function(req,res){
 router.post('/add-product', function(req,res){
   productControl.addProduct(req.body).then(async function (id){
     await sharp(req.files.image.data).resize(640,640).toFile('./public/images/'+id+'.png')
-    res.redirect('/admin')
+    res.redirect('/admin/products')
     //console.log(req.files)/
  })
- //console.log(req.files.image.data)
 })
 //edit product//
 router.get('/edit-product',verifyAdmin, async function(req,res){
@@ -85,27 +99,24 @@ router.post('/edit-product/:id',function(req,res){
       console.log('image not updated')
     }
     console.log('product updated')
-    res.redirect('/admin/')
+    res.redirect('/admin/products/')
   })
 })
 
-// router.post('/upload-photo',(req,res)=>{
-//   console.log(req.body)
-//   if(req.body.image){
-
-//     let image=req.body.image;
-//     console.log('files')
-//     image.mv('./public')
-//   }
-// })
-
 //delete product//
-router.get('/delete-product/:id',verifyAdmin,function(req,res){
-  let productId=req.params.id;
-  productControl.deleteProduct(productId).then(function (response){
+router.delete('/delete-product/:id',verifyAdmin,function(req,res){
+  console.log(req.params.id)
+  productControl.deleteProduct(req.params.id).then(function (response){
     if(response){
+      fs.unlink('./public/images/'+req.params.id+'.png',function(err,data){
+        if(!data){
+          console.log(err)
+        }else{
+          console.log('image deleted')
+        }
+      })
       console.log('product deleted')
-    res.redirect('/admin/')
+      res.json({status:true})
     }else{
       console.log('error to delete')
     }
@@ -113,10 +124,10 @@ router.get('/delete-product/:id',verifyAdmin,function(req,res){
   })
 })
 //all orders//
-router.get('/all-orders',verifyAdmin,async function (req,res){
- let orders = await adminControl.getAllorders()
- console.log(orders)
- res.render('admin/all-orders',{orders,header,admin})
+router.get('/products',verifyAdmin,async function (req,res){
+     var products = await productControl.getAllProducts()
+     console.log(products)
+ res.render('admin/view-products',{admin,header,products})
 
 })
 //view orders//
@@ -133,6 +144,7 @@ router.post('/change-status',function (req,res){
     res.json({status:true})
   })
 })
+
 //all users//
 router.get('/all-users',verifyAdmin,async function(req,res){
   let customers= await adminControl.getAllusers()
@@ -156,4 +168,5 @@ router.post('/cancel-order',function(req,res){
     res.json({status:true})
   })
 })
+
 module.exports = router;
